@@ -61,6 +61,7 @@
     "babel-preset-es2015": "6.24.1",
     "babel-preset-stage-0": "6.24.1",
     "chai": "3.5.0",
+    "feathers-tests-fake-app-users": "1.0.0",
     "istanbul": "1.1.0-alpha.1",
     "mocha": "3.4.2",
     "semistandard": "11.0.0",
