@@ -1,0 +1,40 @@
+.App {
+  font: 15px arial, sans-serif;
+}
+
+.App-logo {
+  animation: spin infinite 20s linear;
+  height: 25px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 50px;
+  padding: 20px;
+  color: white;
+  text-align: center;
+  font: 25px arial, sans-serif;
+}
+
+.App-controls {
+  font-size: large;
+}
+
+.App-status {
+  font-size: x-small;
+  border: 1px solid black;
+}
+
+.App-status .code{
+  font-size: xx-small;
+}
+
+figure {
+  border: 1px dashed black;
+  padding: 5px;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
