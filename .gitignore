@@ -34,3 +34,6 @@ lib/
 
 # Editors
 .idea/
+
+# Yarn
+yarn.lock
