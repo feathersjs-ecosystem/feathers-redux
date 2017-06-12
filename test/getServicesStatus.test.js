@@ -3,8 +3,8 @@
 
 const assert = require('chai').assert;
 const feathersFakes = require('feathers-tests-fake-app-users');
-const reduxifyServices = require('../lib').default;
-const getServicesStatus = require('../lib').getServicesStatus;
+const reduxifyServices = require('../src').default;
+const getServicesStatus = require('../src').getServicesStatus;
 
 const usersDb = [];
 const messagesDb = [];
@@ -25,7 +25,7 @@ describe('reduxify:getServicesStatus', () => {
     services = reduxifyServices(app, ['users', 'messages']);
     rootState = {
       users: services.users.reducer({}, '@@INIT'),
-      messages: services.messages.reducer({}, '@@INIT'),
+      messages: services.messages.reducer({}, '@@INIT')
     };
   });
 
@@ -169,11 +169,11 @@ describe('reduxify:getServicesStatus', () => {
 
 // Helpers
 
-function clone(obj) {
+function clone (obj) {
   return JSON.parse(JSON.stringify(obj));
 }
 
-function reducerActionType(service, method, step, errMessage) {
+function reducerActionType (service, method, step, errMessage) {
   if (typeof errMessage === 'undefined') {
     errMessage = 'xxx'; // eslint-disable-line no-param-reassign
   }
@@ -181,10 +181,10 @@ function reducerActionType(service, method, step, errMessage) {
 
   return {
     type: `SERVICES_${service.toUpperCase()}_${method.toUpperCase()}_${step.toUpperCase()}`,
-    payload,
+    payload
   };
 }
 
-function status(message, className, serviceName) {
+function status (message, className, serviceName) {
   return { message, className, serviceName };
 }

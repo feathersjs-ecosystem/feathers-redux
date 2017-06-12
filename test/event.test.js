@@ -3,7 +3,7 @@
 
 const assert = require('chai').assert;
 const feathersFakes = require('feathers-tests-fake-app-users');
-const reduxifyServices = require('../lib').default;
+const reduxifyServices = require('../src').default;
 
 const usersDb = [];
 
@@ -44,6 +44,6 @@ describe('reduxify:event action creator', () => {
 
 // Helpers
 
-function clone(obj) {
+function clone (obj) {
   return JSON.parse(JSON.stringify(obj));
 }

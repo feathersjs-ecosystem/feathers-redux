@@ -80,11 +80,10 @@ const reduxifyService = (app, route, name = route, options = {}) => {
     store: 'store',
     PENDING: 'PENDING',
     FULFILLED: 'FULFILLED',
-    REJECTED: 'REJECTED',
+    REJECTED: 'REJECTED'
   };
   const opts = Object.assign({}, defaults, options);
   const SERVICE_NAME = `SERVICES_${name.toUpperCase()}_`;
-
 
   const service = app.service(route);
   if (!service) {
@@ -103,7 +102,7 @@ const reduxifyService = (app, route, name = route, options = {}) => {
         [opts.isSaving]: !ifLoading,
         [opts.isFinished]: false,
         [opts.data]: null,
-        [opts.queryResult]: state[opts.queryResult] || null, //  leave previous to reduce redraw
+        [opts.queryResult]: state[opts.queryResult] || null //  leave previous to reduce redraw
       });
     },
 
@@ -117,7 +116,7 @@ const reduxifyService = (app, route, name = route, options = {}) => {
         [opts.isSaving]: false,
         [opts.isFinished]: true,
         [opts.data]: !isFind ? action.payload : null,
-        [opts.queryResult]: isFind ? action.payload : (state[opts.queryResult] || null),
+        [opts.queryResult]: isFind ? action.payload : (state[opts.queryResult] || null)
       };
     },
 
@@ -133,9 +132,9 @@ const reduxifyService = (app, route, name = route, options = {}) => {
         [opts.isSaving]: false,
         [opts.isFinished]: true,
         [opts.data]: null,
-        [opts.queryResult]: isFind ? null : (state[opts.queryResult] || null),
+        [opts.queryResult]: isFind ? null : (state[opts.queryResult] || null)
       };
-    },
+    }
   });
 
   // ACTION TYPES
@@ -189,17 +188,17 @@ const reduxifyService = (app, route, name = route, options = {}) => {
             [opts.isFinished]: false,
             [opts.data]: null,
             [opts.queryResult]: action.payload ? state[opts.queryResult] : null,
-            [opts.store]: null,
+            [opts.store]: null
           };
         } },
-        
+
         // update store
         { [STORE]: (state, action) => {
           debug(`redux:${STORE}`, action);
-          
+
           return {
             ...state,
-            [opts.store]: action.payload,
+            [opts.store]: action.payload
           };
         } }
       ),
@@ -210,9 +209,9 @@ const reduxifyService = (app, route, name = route, options = {}) => {
         [opts.isFinished]: false,
         [opts.data]: null,
         [opts.queryResult]: null,
-        [opts.store]: null,
+        [opts.store]: null
       }
-    ),
+    )
   };
 };
 
@@ -275,7 +274,7 @@ export const getServicesStatus = (servicesState, serviceNames) => {
   var status = { // eslint-disable-line no-var
     message: '',
     className: '',
-    serviceName: '',
+    serviceName: ''
   };
   serviceNames = // eslint-disable-line no-param-reassign
     Array.isArray(serviceNames) ? serviceNames : [serviceNames];

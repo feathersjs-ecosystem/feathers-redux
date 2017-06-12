@@ -3,11 +3,11 @@
 
 const assert = require('chai').assert;
 const feathersFakes = require('feathers-tests-fake-app-users');
-const reduxifyServices = require('../lib').default;
+const reduxifyServices = require('../src').default;
 
 const usersDb = [
   { _id: 'a', email: 'a', isVerified: true, verifyToken: null, verifyExpires: null },
-  { _id: 'b', email: 'b', isVerified: true, verifyToken: null, verifyExpires: null },
+  { _id: 'b', email: 'b', isVerified: true, verifyToken: null, verifyExpires: null }
 ];
 
 describe('action-creators', () => {
@@ -21,29 +21,29 @@ describe('action-creators', () => {
       args: [{ query: { email: 'a' } }],
       result: {
         total: 1,
-        data: [{ _id: 'a', email: 'a', isVerified: true, verifyToken: null, verifyExpires: null }],
-      },
+        data: [{ _id: 'a', email: 'a', isVerified: true, verifyToken: null, verifyExpires: null }]
+      }
     },
     get: {
       args: ['a'],
-      result: { _id: 'a', email: 'a', isVerified: true, verifyToken: null, verifyExpires: null },
+      result: { _id: 'a', email: 'a', isVerified: true, verifyToken: null, verifyExpires: null }
     },
     create: {
       args: [{ email: 'c', isVerified: true, verifyToken: null, verifyExpires: null }],
-      result: { email: 'c', isVerified: true, verifyToken: null, verifyExpires: null },
+      result: { email: 'c', isVerified: true, verifyToken: null, verifyExpires: null }
     },
     update: {
       args: ['a', { email: 'abc123', isVerified: true, verifyToken: null, verifyExpires: null }],
-      result: { _id: 'a', email: 'abc123', isVerified: true, verifyToken: null, verifyExpires: null },
+      result: { _id: 'a', email: 'abc123', isVerified: true, verifyToken: null, verifyExpires: null }
     },
     patch: {
       args: ['a', { email: 'xyz789' }],
-      result: { _id: 'a', email: 'xyz789', isVerified: true, verifyToken: null, verifyExpires: null },
+      result: { _id: 'a', email: 'xyz789', isVerified: true, verifyToken: null, verifyExpires: null }
     },
     remove: {
       args: ['a'],
-      result: { _id: 'a', email: 'a', isVerified: true, verifyToken: null, verifyExpires: null },
-    },
+      result: { _id: 'a', email: 'a', isVerified: true, verifyToken: null, verifyExpires: null }
+    }
   };
 
   beforeEach(() => {
@@ -94,17 +94,17 @@ describe('action-creators', () => {
   describe('fails correctly for', () => {
     const invalids = {
       get: {
-        args: ['z'],
+        args: ['z']
       },
       update: {
-        args: ['z', { email: 'abc123', isVerified: true, verifyToken: null, verifyExpires: null }],
+        args: ['z', { email: 'abc123', isVerified: true, verifyToken: null, verifyExpires: null }]
       },
       patch: {
-        args: ['z', { email: 'xyz789' }],
+        args: ['z', { email: 'xyz789' }]
       },
       remove: {
-        args: ['z'],
-      },
+        args: ['z']
+      }
     };
 
     Object.keys(invalids).forEach(method => {
@@ -126,10 +126,10 @@ describe('action-creators', () => {
 
 // Helpers
 
-function clone(obj) {
+function clone (obj) {
   return JSON.parse(JSON.stringify(obj));
 }
 
-function actionType(method) {
+function actionType (method) {
   return (`SERVICES_USERS_${method.toUpperCase()}`);
 }

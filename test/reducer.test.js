@@ -3,7 +3,7 @@
 
 const assert = require('chai').assert;
 const feathersFakes = require('feathers-tests-fake-app-users');
-const reduxifyServices = require('../lib').default;
+const reduxifyServices = require('../src').default;
 
 const usersDb = [];
 
@@ -35,7 +35,7 @@ describe('reduxify:reducer - array of paths', () => {
       isFinished: false,
       data: null,
       queryResult: null,
-      store: null,
+      store: null
     });
   });
 
@@ -74,7 +74,7 @@ describe('reduxify:reducer - array of paths', () => {
   describe('for reset', () => {
     it('resets state', () => {
       const state = services.users.reducer({}, services.users.reset());
-      
+
       assert.deepEqual(state, {
         isError: null,
         isLoading: false,
@@ -82,7 +82,7 @@ describe('reduxify:reducer - array of paths', () => {
         isFinished: false,
         data: null,
         queryResult: null,
-        store: null,
+        store: null
       });
     });
 
@@ -107,7 +107,7 @@ describe('reduxify:reducer - array of paths', () => {
         isFinished: false,
         data: null,
         queryResult: null,
-        store: null,
+        store: null
       });
     });
 
@@ -122,17 +122,17 @@ describe('reduxify:reducer - array of paths', () => {
         isFinished: false,
         data: null,
         queryResult: [{ a: 'a' }],
-        store: null,
+        store: null
       });
     });
   });
-  
+
   describe('for store', () => {
     it('resets state', () => {
       const state = services.users.reducer({}, services.users.store('harry'));
-    
+
       assert.deepEqual(state, {
-        store: 'harry',
+        store: 'harry'
       });
     });
   });
@@ -166,7 +166,7 @@ describe('reduxify:reducer - single path', () => {
       isFinished: false,
       data: null,
       queryResult: null,
-      store: null,
+      store: null
     });
   });
 });
@@ -199,25 +199,25 @@ describe('reduxify:reducer - path & convenience name', () => {
       isFinished: false,
       data: null,
       queryResult: null,
-      store: null,
+      store: null
     });
   });
 });
 
 // Helpers
 
-function clone(obj) {
+function clone (obj) {
   return JSON.parse(JSON.stringify(obj));
 }
 
-function reducerActionType(method, step) {
+function reducerActionType (method, step) {
   return {
     type: `SERVICES_USERS_${method.toUpperCase()}_${step.toUpperCase()}`,
-    payload: 'xxx',
+    payload: 'xxx'
   };
 }
 
-function getValidStates(ifLoading, isFind, haveQueryResult) {
+function getValidStates (ifLoading, isFind, haveQueryResult) {
   const qr = haveQueryResult ? [{ a: 'a' }] : null;
 
   return {
@@ -227,7 +227,7 @@ function getValidStates(ifLoading, isFind, haveQueryResult) {
       isSaving: !ifLoading,
       isFinished: false,
       data: null,
-      queryResult: qr,
+      queryResult: qr
 
     },
     fulfilled: {
@@ -236,7 +236,7 @@ function getValidStates(ifLoading, isFind, haveQueryResult) {
       isSaving: false,
       isFinished: true,
       data: !isFind ? 'xxx' : null,
-      queryResult: isFind ? 'xxx' : qr,
+      queryResult: isFind ? 'xxx' : qr
     },
     rejected: {
       isError: 'xxx',
@@ -244,7 +244,7 @@ function getValidStates(ifLoading, isFind, haveQueryResult) {
       isSaving: false,
       isFinished: true,
       data: null,
-      queryResult: qr,
-    },
+      queryResult: qr
+    }
   };
 }
