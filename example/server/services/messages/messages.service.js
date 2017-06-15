@@ -12,7 +12,7 @@ module.exports = function () {
   const paginate = app.get('paginate');
 
   const options = {
-    // name: 'messages', // patch so table resides in-memory
+    name: 'messages',
     Model,
     paginate
   };
