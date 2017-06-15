@@ -21,7 +21,7 @@ const initialStatus = { message: '', className: '', serviceName: '' };
 const savingStatus = {
   message: 'messages is saving',
   className: 'isSaving',
-  serviceName: 'messages',
+  serviceName: 'messages'
 };
 const errorStatus = id => ({
   message: `messages: No record found for id '${id}'`,
@@ -57,7 +57,7 @@ describe('integration test', () => {
           store = configureStore(reduxifiedServices);
         });
     });
-  
+
     it('has getServicesStatus', () => {
       assert.isFunction(getServicesStatus);
     });
@@ -67,7 +67,7 @@ describe('integration test', () => {
 
       assert.deepEqual(state.users, initServiceState);
       assert.deepEqual(state.messages, initServiceState);
-  
+
       assert.deepEqual(getServicesStatus(state, 'users'), initialStatus);
       assert.deepEqual(getServicesStatus(state, 'messages'), initialStatus);
       assert.deepEqual(getServicesStatus(state, ['users', 'messages']), initialStatus);
@@ -80,7 +80,7 @@ describe('integration test', () => {
       assert.deepEqual(state.messages, {
         ...initServiceState, isSaving: true
       });
-  
+
       assert.deepEqual(getServicesStatus(state, ['users', 'messages']), savingStatus);
 
       return promise.then(() => {
@@ -88,7 +88,7 @@ describe('integration test', () => {
         assert.deepEqual(state.messages, {
           ...initServiceState, isFinished: true, data: { id: 1, text: 'hello' }
         });
-  
+
         assert.deepEqual(getServicesStatus(state, ['users', 'messages']), initialStatus);
       });
     });
@@ -112,7 +112,7 @@ describe('integration test', () => {
             { ...state.messages, isError: null },
             { ...initServiceState, isError: null, isFinished: true, data: null }
           );
-  
+
           assert.deepEqual(getServicesStatus(state, ['users', 'messages']), errorStatus(999));
         });
     });
@@ -137,7 +137,7 @@ describe('integration test', () => {
               queryResult: [{ id: 0, order: 0 }, { id: 1, order: 1 }]
             }
           );
-  
+
           assert.deepEqual(getServicesStatus(state, ['users', 'messages']), initialStatus);
         });
     });
@@ -155,7 +155,7 @@ describe('integration test', () => {
 
           state = store.getState();
           assert.deepEqual(state.messages, initServiceState);
-  
+
           assert.deepEqual(getServicesStatus(state, ['users', 'messages']), initialStatus);
         });
     });
@@ -202,7 +202,7 @@ describe('integration test', () => {
             last: { action: 'add-listeners' },
             records: [{ id: 0, order: 0 }, { id: 1, order: 1 }]
           });
-  
+
           assert.deepEqual(getServicesStatus(state, ['users', 'messages']), initialStatus);
         });
     });
