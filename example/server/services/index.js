@@ -1,14 +1,8 @@
+'use strict';
 
-/* eslint no-console: 0 */
+const messages = require('./messages/messages.service.js');
 
-const message = require('./message');
-const authentication = require('./authentication');
-const user = require('./user');
-
-module.exports = function () { // 'function' needed as we use 'this'
-  const app = this;
-
-  app.configure(authentication);
-  app.configure(user);
-  app.configure(message);
+module.exports = function () {
+  const app = this; // eslint-disable-line no-unused-vars
+  app.configure(messages);
 };
