@@ -17,8 +17,8 @@ class App extends Component {
   };
 
   getStatusMessage() {
-    const status = getServicesStatus(this.props.servicesState, ['users', 'messages']).message;
-    return status && ' "It\'s ... ah ... it\'s green, Captain."';
+    const status = getServicesStatus(this.props.servicesState, ['users', 'messages']);
+    return status.message || '';
   }
 
   render() {
@@ -27,7 +27,7 @@ class App extends Component {
       <div className="App">
         <div className="App-header">
           <img src="./logo.svg" className="App-logo" alt="logo" />
-          Reduxify Feathers Services
+          feathers-redux
         </div>
         <div className="App-controls">
           <br />
@@ -51,7 +51,7 @@ class App extends Component {
         </div>
         <br />
         <div className="App-status">
-          getServicesStatus():
+          Status:
           <span style={{ fontStyle: 'italic' }}> {this.getStatusMessage()}</span>
           <br />
           <br />
@@ -74,7 +74,7 @@ class App extends Component {
           </figure>
           <br />
           <br />
-          realtime local replica:
+          state.messages.store:
           <figure>
             <pre>
               <code>

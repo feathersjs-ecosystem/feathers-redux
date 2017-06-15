@@ -1,6 +1,7 @@
 # feathers-reduxify-services example
 
-> Example showing feathers-reduxify-services being used.
+> Example showing feathers-redux being used.
+Read feathers-redux/README.md for details.
 
 ## About
 
