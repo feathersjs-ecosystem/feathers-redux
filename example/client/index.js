@@ -14,18 +14,6 @@ store.dispatch(services.messages.create({ text: 'hello' }));
 store.dispatch(services.messages.find());
 store.dispatch(services.messages.get('hjhjhj'));
 
-/*
-const messages = feathersApp.service('messages');
-
-messages.on('created', data => {
-  store.dispatch(
-    services.messages.on('created', data, (event, data, dispatch, getState) => {
-      console.log('--created event', data);
-    })
-  );
-});
-*/
-
 const messages = feathersApp.service('/messages');
 
 const messagesRealtime = new Realtime(messages);

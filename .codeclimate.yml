@@ -7,3 +7,4 @@ engines:
           count_threshold: 5
     exclude_paths:
     - example-old/
+    - node_modules/

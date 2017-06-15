@@ -8,8 +8,7 @@ const socket = io();
 
 const app = feathers()
   .configure(feathers.socketio(socket))
-  .configure(feathers.hooks())
-  .configure(feathers.authentication({ storage: window.localStorage }));
+  .configure(feathers.hooks());
 
 export default app;
 export const services = reduxifyServices(app, ['users', 'messages']);

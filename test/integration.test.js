@@ -5,7 +5,7 @@ const memory = require('feathers-memory');
 const Realtime = require('feathers-offline-realtime');
 
 const configureStore = require('./client/store');
-const reduxifyServices = require('../src').default;
+const { default: reduxifyServices, getServicesStatus } = require('../src');
 
 const initServiceState = {
   isError: null,
@@ -16,6 +16,18 @@ const initServiceState = {
   queryResult: null,
   store: null
 };
+
+const initialStatus = { message: '', className: '', serviceName: '' };
+const savingStatus = {
+  message: 'messages is saving',
+  className: 'isSaving',
+  serviceName: 'messages'
+};
+const errorStatus = id => ({
+  message: `messages: No record found for id '${id}'`,
+  className: 'not-found',
+  serviceName: 'messages'
+});
 
 const initData = [];
 for (let i = 0, len = 5; i < len; i += 1) {
@@ -31,7 +43,7 @@ let actions;
 let messagesRealtime;
 
 describe('integration test', () => {
-  describe('reduxifiedServices', () => {
+  describe('feathers-redux', () => {
     beforeEach(() => {
       app = feathers()
         .configure(servicesConfig);
@@ -46,11 +58,19 @@ describe('integration test', () => {
         });
     });
 
+    it('has getServicesStatus', () => {
+      assert.isFunction(getServicesStatus);
+    });
+
     it('initial state', () => {
       state = store.getState();
 
       assert.deepEqual(state.users, initServiceState);
       assert.deepEqual(state.messages, initServiceState);
+
+      assert.deepEqual(getServicesStatus(state, 'users'), initialStatus);
+      assert.deepEqual(getServicesStatus(state, 'messages'), initialStatus);
+      assert.deepEqual(getServicesStatus(state, ['users', 'messages']), initialStatus);
     });
 
     it('successful service call', () => {
@@ -61,11 +81,15 @@ describe('integration test', () => {
         ...initServiceState, isSaving: true
       });
 
+      assert.deepEqual(getServicesStatus(state, ['users', 'messages']), savingStatus);
+
       return promise.then(() => {
         state = store.getState();
         assert.deepEqual(state.messages, {
           ...initServiceState, isFinished: true, data: { id: 1, text: 'hello' }
         });
+
+        assert.deepEqual(getServicesStatus(state, ['users', 'messages']), initialStatus);
       });
     });
 
@@ -88,6 +112,8 @@ describe('integration test', () => {
             { ...state.messages, isError: null },
             { ...initServiceState, isError: null, isFinished: true, data: null }
           );
+
+          assert.deepEqual(getServicesStatus(state, ['users', 'messages']), errorStatus(999));
         });
     });
 
@@ -111,6 +137,8 @@ describe('integration test', () => {
               queryResult: [{ id: 0, order: 0 }, { id: 1, order: 1 }]
             }
           );
+
+          assert.deepEqual(getServicesStatus(state, ['users', 'messages']), initialStatus);
         });
     });
 
@@ -127,6 +155,8 @@ describe('integration test', () => {
 
           state = store.getState();
           assert.deepEqual(state.messages, initServiceState);
+
+          assert.deepEqual(getServicesStatus(state, ['users', 'messages']), initialStatus);
         });
     });
   });
@@ -172,6 +202,8 @@ describe('integration test', () => {
             last: { action: 'add-listeners' },
             records: [{ id: 0, order: 0 }, { id: 1, order: 1 }]
           });
+
+          assert.deepEqual(getServicesStatus(state, ['users', 'messages']), initialStatus);
         });
     });
 

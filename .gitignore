@@ -37,3 +37,6 @@ lib/
 
 # Yarn
 yarn.lock
+
+# Build bundles
+public/dist/
