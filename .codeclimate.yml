@@ -1,0 +1,5 @@
+engines:
+  duplication:
+    count_threshold: 3
+    exclude_paths:
+    - example-old/
