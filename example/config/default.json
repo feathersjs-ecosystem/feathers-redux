@@ -1,10 +1,10 @@
 {
   "host": "localhost",
   "port": 3030,
-  "nedb": "../data/",
   "public": "../public/",
-  "auth": {
-    "secret": "i16mLa4qAGV9vmgU6hBPOds2Lc63RqLWepFYiiGtm33nmYZaPZzHTh8mAyImLzGIBfeNeVSCsMH3G53KPAgEXA==",
-    "local": {}
-  }
+  "paginate": {
+    "default": 10,
+    "max": 50
+  },
+  "nedb": "../data"
 }

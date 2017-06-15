@@ -1,0 +1,9 @@
+engines:
+  duplication:
+    enabled: true
+    config:
+      languages:
+        javascript:
+          count_threshold: 5
+    exclude_paths:
+    - example-old/

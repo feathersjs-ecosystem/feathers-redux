@@ -1,65 +1,72 @@
 {
-  "name": "feathers-reduxify-service-example",
-  "description": "Example: Wrap Feathers services so they work transparently and perfectly with Redux.",
-  "version": "0.0.1",
+  "name": "feathers-redux-example",
+  "description": "feathers-redux example",
+  "version": "0.0.0",
   "homepage": "",
-  "main": "src/",
+  "main": "server",
   "keywords": [
-    "feathers",
-    "feathersjs",
-    "redux"
+    "feathers"
   ],
-  "license": "MIT",
-  "repository": {},
-  "author": {},
+  "author": {
+    "name": "John Szwaronek",
+    "email": "johnsz9999@gmail.com"
+  },
   "contributors": [],
   "bugs": {},
+  "directories": {
+    "lib": "server"
+  },
   "engines": {
-    "node": ">= 4.6.0"
+    "node": ">= 6.0.0",
+    "npm": ">= 3.0.0"
   },
   "scripts": {
+    "test": "npm run eslint && npm run mocha",
+    "eslint": "eslint server/. test/. --config .eslintrc.json",
+    "start": "node server/",
+    "mocha": "mocha test/ --recursive",
     "prebuild": "shx rm -rf ./public/dist",
     "build": "webpack --progress --colors",
     "build:watch": "webpack --watch --progress --colors",
-    "start": "nodemon --watch server --watch public server/"
+    "start:DEV": "nodemon --watch server --watch public server/"
   },
   "dependencies": {
-    "body-parser": "^1.15.2",
+    "body-parser": "^1.17.2",
     "compression": "^1.6.2",
-    "cors": "^2.7.1",
-    "feathers": "2.1.1",
-    "feathers-authentication": "1.2.2",
-    "feathers-authentication-jwt": "0.3.1",
-    "feathers-authentication-local": "0.3.4",
-    "feathers-client": "2.1.0",
-    "feathers-configuration": "0.4.1",
-    "feathers-errors": "2.6.3",
-    "feathers-hooks": "2.0.0",
-    "feathers-hooks-common": "3.0.0",
+    "cors": "^2.8.3",
+    "feathers": "^2.1.3",
+    "feathers-client": "^2.1.0",
+    "feathers-configuration": "^0.4.1",
+    "feathers-errors": "^2.8.1",
+    "feathers-hooks": "^2.0.1",
+    "feathers-hooks-common": "^3.5.1",
     "feathers-nedb": "2.6.2",
-    "feathers-offline-realtime": "0.0.1",
-    "feathers-rest": "1.7.2",
-    "feathers-socketio": "1.6.0",
+    "feathers-offline-realtime": "^0.0.1",
+    "feathers-rest": "^1.7.3",
+    "feathers-socketio": "^2.0.0",
     "nedb": "1.8.0",
     "react": "^15.0.1",
     "react-dom": "^15.0.1",
     "react-redux": "^4.4.5",
-    "react-simple-input": "0.2.1",
+    "react-simple-input": "^0.2.1",
     "redux": "^3.5.2",
     "redux-promise-middleware": "^3.3.2",
-    "redux-thunk": "2.1.0",
-    "serve-favicon": "^2.3.0",
-    "winston": "^2.2.0"
+    "redux-thunk": "^2.1.0",
+    "serve-favicon": "^2.4.3",
+    "winston": "^2.3.1"
   },
   "devDependencies": {
-    "babel-core": "6.24.1",
-    "babel-loader": "6.4.1",
-    "babel-plugin-transform-runtime": "6.23.0",
-    "babel-preset-es2015": "6.24.1",
-    "babel-preset-react": "6.24.1",
-    "babel-preset-stage-0": "6.24.1",
-    "nodemon": "1.11.0",
-    "shx": "0.2.2",
-    "webpack": "2.4.1"
+    "babel-core": "^6.24.1",
+    "babel-loader": "^6.4.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "eslint": "^4.0.0",
+    "mocha": "^3.4.2",
+    "nodemon": "^1.11.0",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.1",
+    "shx": "^0.2.2",
+    "webpack": "^2.4.1"
   }
 }

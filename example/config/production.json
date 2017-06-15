@@ -1,12 +1,4 @@
 {
-  "host": "users-auth-app.feathersjs.com",
-  "port": 80,
-  "nedb": "NEDB_BASE_PATH",
-  "public": "../public/",
-  "auth": {
-    "token": {
-      "secret": "FEATHERS_AUTH_SECRET"
-    },
-    "local": {}
-  }
+  "host": "feathers-redux-example-app.feathersjs.com",
+  "port": "PORT"
 }
