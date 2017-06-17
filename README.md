@@ -43,7 +43,7 @@ store.dispatch(services.messages.create({ text: 'Hello!' }));
 npm install feathers-redux --save
 ```
 
-## Documentation
+## Documentation reduxifyServices
 
 ```javascript
 import reduxifyServices, { getServicesStatus } from 'feathers-redux';
@@ -101,6 +101,44 @@ The default is
   users: { ... },
 }
 ```
+
+## Documentation getServicesStatus
+
+Its not uncommon for React apps to display info messages such as "Messages are being saved."
+`getServicesStatus` returns a relevant message for the reduxified Feathers services.
+
+
+```javascript
+import reduxifyServices, { getServicesStatus } from 'feathers-redux';
+const msg = getServicesStatus(state, serviceNames)
+```
+
+__Options:__
+
+- `state` (*required*) - The (slice of) state containing state for the services.
+- `serviceNames` (*required*, string, array of strings) - The
+names of the Feathers services, most important first.
+
+The services are checked from left to right.
+They first are checked for an error condition (`isError`),
+and if an error is found the function returns an object similar to
+```javascript
+{ message: 'messages: Error.message',
+  className = Error.className, // Can be used to internationalize the message.
+  serviceName = 'messages';
+}
+```
+
+Next they are check for loading or saving,
+and if one is found the function returns an object similar to
+```javascript
+{ message: 'messages is loading',
+  className = 'isLoading', // Or isSaving.
+  serviceName = 'messages';
+}
+```
+
+Otherwise the object is returned with empty strings.
 
 ## Realtime replication
 
