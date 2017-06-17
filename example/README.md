@@ -31,6 +31,30 @@ An open source web framework for building modern real-time applications.
     cd path/to/feathers-reduxify-services/example
     npm start
     ```
+Build the client bundle.
+
+`npm run build` bundles the client code into `public/dist/bundle.js`.
+
+Start your app.
+    
+```
+cd path/to/feathers-reduxify-services/example
+npm start
+```
+
+Point your browser at `localhost:3030/index.html`
+
+The client, on startup, adds a `Hello` item to `messages`, `find`'s and displays items,
+and tries to `get` a non-existent item.
+
+You can `create`, `get`, `patch`, `remove` and `find` items using the UI.
+
+`client/feathers/index.js` reduxifies the `users` and `messages` feathers services
+and exports their action creators and reducer as `{ services }`.
+`client/reducers/index.js` hooks up the reducers for the reduxified services.
+`client/index.js` performs the initial `create`, `find` and `get`.
+It also configures the realtime replication.
+`client/App.js::mapDispatchToProps` dispatches UI events.
 
 ## Help
 
