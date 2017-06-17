@@ -1,9 +1,9 @@
 
 import { combineReducers } from 'redux';
-import { services } from '../feathers';
 
-export default combineReducers({
-  users: services.users.reducer,
-  messages: services.messages.reducer,
-});
-
+export default function (reduxifiedServices) {
+  return combineReducers({
+    users: reduxifiedServices.users.reducer,
+    messages: reduxifiedServices.messages.reducer
+  });
+}

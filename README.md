@@ -16,24 +16,23 @@ app.use('/users', ...);
 app.use('/messages', ...);
 
 /* on client */
-const app = feathers().configure(feathers.socketio(socket)).configure(feathers.hooks());
+import reduxifyServices from 'feathers-redux';
+const feathersClient = feathers(). ...;
 
-// reduxify Feathers' services
-const services = reduxifyServices(app, ['users', 'messages']); // the 1 line
+// Create Redux actions and reducers for Feathers services
+const services = reduxifyServices(feathersClient, ['users', 'messages']);
 
-// hook up Redux reducers
+// Configure Redux store & reducers
 export default combineReducers({
   users: services.users.reducer,
   messages: services.messages.reducer,
 });
 
-// Feathers is now 100% compatible with Redux
+// Feathers service calls may now be dispatched.
 store.dispatch(services.messages.get('557XxUL8PalGMgOo'));
 store.dispatch(services.messages.find());
-store.dispatch(services.messages.create({ text: 'Shiver me timbers!' }));
+store.dispatch(services.messages.create({ text: 'Hello!' }));
 ```
-
-**_Simple, huh._**
 
 [](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?utm_source=chrome-app-launcher-info-dialog)
 ![](./docs/screen-shot.jpg)
@@ -46,125 +45,109 @@ npm install feathers-redux --save
 
 ## Documentation
 
-## Complete Example
-
-Expose action creators and reducers for Feathers services. Then use them like normal Redux.
-
 ```javascript
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import reduxifyServices, { getServicesStatus } from 'feathers-reduxify-services';
-const feathersApp = feathers().configure(feathers.socketio(socket)) ...
-
-// Expose Redux action creators and reducers for Feathers' services
-const services = reduxifyServices(feathersApp, ['users', 'messages']);
-
-// Typical Redux store creation, crammed together
-const store = applyMiddleware(
-  reduxThunk, reduxPromiseMiddleware() // middleware needed
-)(createStore)(combineReducers({
-  users: services.users.reducer, // include reducers for Feathers' services
-  messages: services.messages.reducer
-}));
-
-// Invoke Feathers' services using standard Redux.
-store.dispatch(services.messages.get('557XxUL8PalGMgOo'));
-store.dispatch(services.messages.find());
-store.dispatch(services.messages.create({ text: 'Shiver me timbers!' }));
+import reduxifyServices, { getServicesStatus } from 'feathers-redux';
+const services = reduxifyServices(app, serviceNames, options);
 ```
 
-Dispatch Redux actions on Feathers' real time service events.
+__Options:__
 
+- `app` (*required*) - The Feathers client app.
+- `serviceNames` (*required*, string, array of strings, or object) - The
+paths of the Feathers services for which to create Redux action creators and reducers.
+    - `'messages'` is short for `{ messages: 'messages }`.
+    You refer to the reduxified action creators with `service.messages.create(data)`
+    - `['users', 'messages']` is short for `{ users: 'users', messages: 'messages }`.
+    You refer to the reduxified action creators with
+    `service.users.create(data)` and `service.messages.create(data)`.
+    - `{ '/buildings/:buildingid': 'buildings' }` will reduxify the Feathers service
+    with the path `/buildings/:buildingid`.
+    You refer to the reduxified action creators with `service.buildings.create(data)`.
+- `options` (*optional*) - Names for parts of the Redux store,
+and strings used to form the action constants.
+The default is
 ```javascript
-const messages = feathersApp.service('messages');
-
-messages.on('created', data => {
-  store.dispatch(
-    // Create a thunk action to invoke the function.
-    services.messages.on('created', data, (eventName, data, dispatch, getState) => {
-      console.log('--created event', data);
-    })
-  );
-});
+{ // Names of props for service state
+  isError: 'isError', // e.g. state.messages.isError
+  isLoading: 'isLoading',
+  isSaving: 'isSaving',
+  isFinished: 'isFinished',
+  data: 'data',
+  queryResult: 'queryResult',
+  store: 'store',
+  // Fragments for name of actions
+  PENDING: 'PENDING', // e.g. MESSAGES_CREATE_PENDING
+  FULFILLED: 'FULFILLED',
+  REJECTED: 'REJECTED',
+}
+```
+    
+- `reduxifyServices` returns an object of the form
+```javascript
+{
+  messages: { // For the Feathers service with path /messages.
+    // action creators
+    create(data, params) {}, // Action creator for app.services('messages').create(data, params)
+    update(id, data, params) {},
+    patch(id, data, params) {},
+    remove(id, params) {},
+    find(params) {},
+    get(id, params) {},
+    store(object) {}, // Interface point for realtime replication.
+    reset() {}, // Reinitializes store for this service.
+    // reducer
+    reducer() {}, // Reducers handling actions MESSAGES_CREATE_PENDING, _FULFILLED, and _REJECTED.
+  },
+  users: { ... },
+}
 ```
 
-Keep the user informed of service activity.
+## Realtime replication
 
+The Feathers read-only, realtime replication engine is
+[`feathers-offline-realtime`](https://github.com/feathersjs/feathers-offline-realtime).
+
+You can connect this engine with
 ```javascript
-const status = getServicesStatus(servicesRootState, ['users', 'messages']).message;
-```
+const Realtime = require('feathers-offline-realtime');
+const messages = feathersClient.service('/messages');
 
-Replication engines generally maintain a near realtime, local copy of (some of) the records
-in a service on the server.
-
-`feathers-reduxify-services` now provides an interface which you can use
-to interface replication engines with the Redux state for the service.
-This interface updates the state property `store`.
-
-`feathers-offline-realtime` is the official Feathersjs realtime replication engine.
-Please read its README.
-
-It can be interfaced with `feathers-reduxify-services` as follows:
-```javascript
-import reduxifyServices from 'feathers-reduxify-services';
-import Realtime from 'feathers-offline-realtime';
-
-const services = reduxifyServices(app, ['messages', ...]);
-const store = applyMiddleware( ... , messages: services.messages.reducer }));
-
-const messagesRealtime = new Realtime(feathersApp.service('/messages'));
-
-messagesRealtime.on('events', (records, last) => {
+const messagesRealtime = new Realtime(messages, { subscriber: (records, last) => {
   store.dispatch(services.messages.store({ connected: messagesRealtime.connected, last, records }));
-});
+} });
 ```
 
-This would create the state:
+## Shape of the store
+
+The above code produces a state shaped like
 ```javascript
-state.messages.store = {
-  connected: boolean, // if the replication engine is still listening to server
-  last: { activity, eventName, record }, // last activity. See feathers-offline-realtime
-  records: [ objects ], // the near realtime contents of the remote service
+state = {
+  messages: {
+    isLoading: boolean, // If get or find have started
+    isSaving: boolean, // If update, patch or remove have started
+    isFinished: boolean, // If last call finished successfully
+    isError: Feathers error, // If last call was unsuccessful
+    data: hook.result, // Results from other than a find call
+    queryResult: hook.result, // Results from a find call. May be paginated.
+    store: {
+      connected: boolean, // If replication engine still listening for Feathers service events
+      last: {
+        action: string, // Replication action. See feathers-offline-realtime.
+        eventName: string || undefined, // Feathers service event method. e.g. created
+        records: object || undefined, // Feathers service event record
+      },
+      records: [ objects ], // Sorted near realtime contents of remote service
+    },
+  },
+  users: { ... },
 };
 ```
 
-## Example app
+## Examples
 
-Make sure you have [NodeJS](https://nodejs.org/) installed.
+`example/` contains an example you may run. Read its README for instaructions.
 
-Install your dependencies.
-    
-```
-npm install webpack -g
-cd path/to/feathers-reduxify-services
-npm install
-cd example
-npm install
-```
-    
-Build the client bundle.
-
-`npm run build` bundles the client code into `public/dist/bundle.js`.
-
-Start your app.
-    
-```
-cd path/to/feathers-reduxify-services/example
-npm start
-```
-
-Point your browser at `localhost:3030/index.html`
-
-The client, on startup, adds a `Hello` item to `messages`, `find`'s and displays items,
-and tries to `get` a non-existent item.
-
-You can `create`, `get`, `patch`, `remove` and `find` items using the UI.
-
-`client/feathers/index.js` reduxifies the `users` and `messages` feathers services
-and exports their action creators and reducer as `{ services }`.
-`client/reducers/index.js` hooks up the reducers for the reduxified services.
-`client/index.js` performs the initial `create`, `find` and `get`.
-It also configures the realtime replication.
-`client/App.js::mapDispatchToProps` dispatches UI events.
+`feathers-redux/test/integration.test.js` may answer questions regarding details.
 
 ## License
 

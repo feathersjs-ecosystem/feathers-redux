@@ -271,12 +271,12 @@ export default (app, routeNameMap, options) => {
  */
 
 export const getServicesStatus = (servicesState, serviceNames) => {
-  var status = { // eslint-disable-line no-var
+  var status = {
     message: '',
     className: '',
     serviceName: ''
   };
-  serviceNames = // eslint-disable-line no-param-reassign
+  serviceNames =
     Array.isArray(serviceNames) ? serviceNames : [serviceNames];
 
   // Find an error with an err.message. 'Error' is what feather returns when there is no msg text.
