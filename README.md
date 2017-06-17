@@ -57,13 +57,13 @@ __Options:__
 - `serviceNames` (*required*, string, array of strings, or object) - The
 paths of the Feathers services to reduxify.
     - `'messages'` is short for `{ messages: 'messages }`.
-    You can dispatch calls with `dispatch()service.messages.create(data));`.
-    - `['users', 'messages']` is short for `{ users: 'users', messages: 'messages }`.
+    You can dispatch calls with `dispatch(services.messages.create(data, params));`.
+    - `['users', 'messages']` is short for `{ users: 'users', messages: 'messages' }`.
     - `{ '/buildings/:buildingid': 'buildings' }` will reduxify the Feathers service
     configured with the path `/buildings/:buildingid`.
-    You can dispatch calls with `dispatch()service.buildings.create(data));`.
-- `options` (*optional*) - Names for parts of the Redux store,
-and string fragments used to form the action constants.
+    You can dispatch calls with `dispatch(services.buildings.create(data, params));`.
+- `options` (*optional*) - Names for props in the Redux store,
+and for string fragments in the action constants.
 The default is
 ```javascript
 { // Names of props for service's Redux state
@@ -116,7 +116,7 @@ combineReducers({
 
 ## Documentation: getServicesStatus
 
-Its not uncommon for React apps to display info messages such as "Messages are being saved."
+Its common for React apps to display info messages such as "Messages are being saved."
 `getServicesStatus` returns a relevant message for the reduxified Feathers services.
 
 
@@ -127,7 +127,7 @@ const msg = getServicesStatus(state, serviceNames)
 
 __Options:__
 
-- `state` (*required*) - The (slice of) state containing state for the services.
+- `state` (*required*) - The state containing state for the services.
 - `serviceNames` (*required*, string, array of strings) - The
 names of the Feathers services.
 
@@ -135,18 +135,18 @@ The services are checked from left to right.
 They first are checked for an error condition (`isError`),
 and if an error is found the function returns an object similar to
 ```javascript
-{ message: 'messages: Error.message',
+{ message: 'users: Error.message',
   className = Error.className, // Can be used to internationalize the message.
-  serviceName = 'messages';
+  serviceName = 'users';
 }
 ```
 
 Next they are check for loading or saving,
 and if one is found the function returns an object similar to
 ```javascript
-{ message: 'messages is loading',
+{ message: 'users is loading',
   className = 'isLoading', // Or isSaving.
-  serviceName = 'messages';
+  serviceName = 'users';
 }
 ```
 
@@ -180,7 +180,7 @@ state = {
     queryResult: hook.result, // Results from a find call. May be paginated.
     store: {
       connected: boolean, // If replication engine still listening for Feathers service events
-      last: { // See [feathers-offline-realtime](https://github.com/feathersjs/feathers-offline-realtime#event-information).
+      last: { // Read https://github.com/feathersjs/feathers-offline-realtime#event-information.
         action: string, // Replication action.
         eventName: string, // Feathers service event name. e.g. created
         records: object, // Feathers service event record.
