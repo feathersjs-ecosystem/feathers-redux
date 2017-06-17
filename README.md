@@ -8,14 +8,15 @@
 
 > Integrate Feathers services with your Redux store
 
-**Work in progress. Do not use**
+## Example
 
+On server:
 ```javascript
-/* on server */
 app.use('/users', ...);
 app.use('/messages', ...);
-
-/* on client */
+```
+On client:
+```javascript
 import reduxifyServices from 'feathers-redux';
 const feathersClient = feathers(). ...;
 
@@ -43,10 +44,10 @@ store.dispatch(services.messages.create({ text: 'Hello!' }));
 npm install feathers-redux --save
 ```
 
-## Documentation reduxifyServices
+## Documentation: reduxifyServices
 
 ```javascript
-import reduxifyServices, { getServicesStatus } from 'feathers-redux';
+import reduxifyServices from 'feathers-redux';
 const services = reduxifyServices(app, serviceNames, options);
 ```
 
@@ -54,20 +55,18 @@ __Options:__
 
 - `app` (*required*) - The Feathers client app.
 - `serviceNames` (*required*, string, array of strings, or object) - The
-paths of the Feathers services for which to create Redux action creators and reducers.
+paths of the Feathers services to reduxify.
     - `'messages'` is short for `{ messages: 'messages }`.
-    You refer to the reduxified action creators with `service.messages.create(data)`
+    You can dispatch calls with `dispatch()service.messages.create(data));`.
     - `['users', 'messages']` is short for `{ users: 'users', messages: 'messages }`.
-    You refer to the reduxified action creators with
-    `service.users.create(data)` and `service.messages.create(data)`.
     - `{ '/buildings/:buildingid': 'buildings' }` will reduxify the Feathers service
-    with the path `/buildings/:buildingid`.
-    You refer to the reduxified action creators with `service.buildings.create(data)`.
+    configured with the path `/buildings/:buildingid`.
+    You can dispatch calls with `dispatch()service.buildings.create(data));`.
 - `options` (*optional*) - Names for parts of the Redux store,
-and strings used to form the action constants.
+and string fragments used to form the action constants.
 The default is
 ```javascript
-{ // Names of props for service state
+{ // Names of props for service's Redux state
   isError: 'isError', // e.g. state.messages.isError
   isLoading: 'isLoading',
   isSaving: 'isSaving',
@@ -75,14 +74,14 @@ The default is
   data: 'data',
   queryResult: 'queryResult',
   store: 'store',
-  // Fragments for name of actions
+  // Fragments to form action constants
   PENDING: 'PENDING', // e.g. MESSAGES_CREATE_PENDING
   FULFILLED: 'FULFILLED',
   REJECTED: 'REJECTED',
 }
 ```
     
-- `reduxifyServices` returns an object of the form
+`reduxifyServices` returns an object of the form
 ```javascript
 {
   messages: { // For the Feathers service with path /messages.
@@ -93,7 +92,7 @@ The default is
     remove(id, params) {},
     find(params) {},
     get(id, params) {},
-    store(object) {}, // Interface point for realtime replication.
+    store(object) {}, // Interface for realtime replication.
     reset() {}, // Reinitializes store for this service.
     // reducer
     reducer() {}, // Reducers handling actions MESSAGES_CREATE_PENDING, _FULFILLED, and _REJECTED.
@@ -102,7 +101,20 @@ The default is
 }
 ```
 
-## Documentation getServicesStatus
+Service calls may be dispatched by
+```javascript
+dispatch(services.messages.create(data, params));
+```
+
+Reducers may be combined with
+```javascript
+combineReducers({
+  users: services.users.reducer,
+  messages: services.messages.reducer,
+});
+```
+
+## Documentation: getServicesStatus
 
 Its not uncommon for React apps to display info messages such as "Messages are being saved."
 `getServicesStatus` returns a relevant message for the reduxified Feathers services.
@@ -117,7 +129,7 @@ __Options:__
 
 - `state` (*required*) - The (slice of) state containing state for the services.
 - `serviceNames` (*required*, string, array of strings) - The
-names of the Feathers services, most important first.
+names of the Feathers services.
 
 The services are checked from left to right.
 They first are checked for an error condition (`isError`),
@@ -144,7 +156,6 @@ Otherwise the object is returned with empty strings.
 
 The Feathers read-only, realtime replication engine is
 [`feathers-offline-realtime`](https://github.com/feathersjs/feathers-offline-realtime).
-
 You can connect this engine with
 ```javascript
 const Realtime = require('feathers-offline-realtime');
@@ -169,10 +180,10 @@ state = {
     queryResult: hook.result, // Results from a find call. May be paginated.
     store: {
       connected: boolean, // If replication engine still listening for Feathers service events
-      last: {
-        action: string, // Replication action. See feathers-offline-realtime.
-        eventName: string || undefined, // Feathers service event method. e.g. created
-        records: object || undefined, // Feathers service event record
+      last: { // See [feathers-offline-realtime](https://github.com/feathersjs/feathers-offline-realtime#event-information).
+        action: string, // Replication action.
+        eventName: string, // Feathers service event name. e.g. created
+        records: object, // Feathers service event record.
       },
       records: [ objects ], // Sorted near realtime contents of remote service
     },
@@ -183,9 +194,9 @@ state = {
 
 ## Examples
 
-`example/` contains an example you may run. Read its README for instaructions.
+`example/` contains an example you may run. Its README has instructions.
 
-`feathers-redux/test/integration.test.js` may answer questions regarding details.
+`feathers-redux/test/integration.test.js` may answer any questions regarding details.
 
 ## License
 
