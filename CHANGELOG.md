@@ -1,5 +1,12 @@
 # Change Log
 
+## [v0.0.3](https://github.com/feathersjs/feathers-redux/tree/v0.0.3) (2017-06-22)
+[Full Changelog](https://github.com/feathersjs/feathers-redux/compare/v0.0.2...v0.0.3)
+
+**Fixed bugs:**
+
+- Added required dependency helmet to package.json [\#17](https://github.com/feathersjs/feathers-redux/pull/17) ([eddyystop](https://github.com/eddyystop))
+
 ## [v0.0.2](https://github.com/feathersjs/feathers-redux/tree/v0.0.2) (2017-06-21)
 [Full Changelog](https://github.com/feathersjs/feathers-redux/compare/v0.0.1...v0.0.2)
 
