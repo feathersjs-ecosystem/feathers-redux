@@ -114,6 +114,9 @@ combineReducers({
 });
 ```
 
+> **ProTip:** You have to include `redux-promise-middleware` and `redux-thunk`
+in your middleware.
+
 ## Documentation: getServicesStatus
 
 Its common for React apps to display info messages such as "Messages are being saved."
