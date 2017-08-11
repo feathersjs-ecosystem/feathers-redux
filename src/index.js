@@ -1,5 +1,7 @@
 
 import { createAction, handleActions } from 'redux-actions';
+import { bindActionCreators } from 'redux';
+import { pick, omit, mapObjIndexed } from 'ramda';
 import makeDebug from 'debug';
 
 /**
@@ -309,4 +311,44 @@ export const getServicesStatus = (servicesState, serviceNames) => {
   });
 
   return status;
+};
+
+/**
+ * Method to bind a given dispatch function with the passed services.
+ *
+ * This helps with not having to pass down store.dispatch as a prop everywhere
+ * Read More: http://redux.js.org/docs/api/bindActionCreators.html
+ *
+ * @param {Object} services - using the default reduxifyService method
+ * @param {Function} dispatch - the relevant store.dispatch function which is to be bounded to actionCreators
+ * @param {Array=} targetActions - list of action names to be targeted for binding
+ * @returns {Object} boundServices - returns the new services object with the bounded action creators
+ */
+
+export const bindWithDispatch = (dispatch, services, targetActions) => {
+  targetActions = targetActions || [
+    // default targets from feathers-redux
+    'find',
+    'get',
+    'create',
+    'update',
+    'patch',
+    'remove',
+    'reset',
+    'store',
+    // couple more optional ones in case feathers-reduxify-authentication is being used
+    'authenticate',
+    'logout'
+  ];
+
+  // map over the services object to get every service
+  return mapObjIndexed(val => ({
+
+    //  destructure in bound action creators that are picked
+    ...bindActionCreators(pick(targetActions, val), dispatch),
+
+   // destructure in rest of the keys that were not targeted as action creators
+    ...omit(targetActions, val)
+  }))(services);
+
 };
