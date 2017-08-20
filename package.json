@@ -51,7 +51,6 @@
   },
   "dependencies": {
     "debug": "^2.6.8",
-    "ramda": "^0.24.1",
     "redux": "^3.7.2",
     "redux-actions": "^2.0.3"
   },

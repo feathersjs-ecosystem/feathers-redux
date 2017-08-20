@@ -1,7 +1,6 @@
 
 import { createAction, handleActions } from 'redux-actions';
 import { bindActionCreators } from 'redux';
-import { pick, omit, mapObjIndexed } from 'ramda';
 import makeDebug from 'debug';
 
 /**
@@ -341,14 +340,25 @@ export const bindWithDispatch = (dispatch, services, targetActions) => {
     'logout'
   ];
 
+
+  const _serviceNames = Object.keys(services);
   // map over the services object to get every service
-  return mapObjIndexed(val => ({
+  _serviceNames.forEach(_name => {
 
-    //  destructure in bound action creators that are picked
-    ...bindActionCreators(pick(targetActions, val), dispatch),
+    const _methodNames = Object.keys(services[_name]);
 
-   // destructure in rest of the keys that were not targeted as action creators
-    ...omit(targetActions, val)
-  }))(services);
+    // map over every method in the service
+    _methodNames.forEach(_method => {
 
+      // if method is in targeted actions then replace it with bounded method
+      if (targetActions.includes(_method)) {
+        services[_name][_method] = bindActionCreators(
+          services[_name][_method],
+          dispatch
+        );
+      }
+    });
+  });
+
+  return services;
 };
