@@ -51,6 +51,7 @@
   },
   "dependencies": {
     "debug": "^2.6.8",
+    "redux": "^3.7.2",
     "redux-actions": "^2.0.3"
   },
   "devDependencies": {
@@ -68,7 +69,6 @@
     "feathers-tests-fake-app-users": "^1.0.0",
     "istanbul": "1.1.0-alpha.1",
     "mocha": "^3.4.2",
-    "redux": "^3.6.0",
     "redux-promise-middleware": "^4.3.0",
     "redux-thunk": "^2.2.0",
     "semistandard": "^11.0.0",

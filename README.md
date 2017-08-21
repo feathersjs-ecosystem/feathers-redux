@@ -195,6 +195,34 @@ state = {
 };
 ```
 
+## Autobind Action Creators
+
+Method to bind a given dispatch function with the passed services. 
+This helps with not having to pass down `store.dispatch` as a prop everywhere the service is being used. Read More: http://redux.js.org/docs/api/bindActionCreators.html
+```js
+import reduxifyServices, { bindWithDispatch } from 'feathers-redux';
+
+// create a services object as described above 
+const rawServices = reduxifyServices(...);
+
+// create a store with rootReducer combining reducers from rawServices
+const store = createStore(...)
+
+// use the bindWithDispatch method to bind rawServices' action creators with store.dispatch
+const services = bindWithDispatch(store.dispatch, rawServices)
+```
+```js
+// before 
+store.dispatch(services.messages.get('557XxUL8PalGMgOo'));
+store.dispatch(services.messages.find());
+store.dispatch(services.messages.create({ text: 'Hello!' }));
+
+// after
+services.messages.get('557XxUL8PalGMgOo');
+services.messages.find();
+services.messages.create({ text: 'Hello!' });
+```
+
 ## Examples
 
 `example/` contains an example you may run. Its README has instructions.
