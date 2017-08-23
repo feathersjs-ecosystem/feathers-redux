@@ -1,5 +1,19 @@
 # Change Log
 
+## [v0.1.0](https://github.com/feathersjs/feathers-redux/tree/v0.1.0) (2017-08-23)
+[Full Changelog](https://github.com/feathersjs/feathers-redux/compare/v0.0.3...v0.1.0)
+
+**Implemented enhancements:**
+
+- How to achieve autobound action creators with a store? [\#21](https://github.com/feathersjs/feathers-redux/issues/21)
+- Export action types [\#29](https://github.com/feathersjs/feathers-redux/pull/29) ([amaurymartiny](https://github.com/amaurymartiny))
+- added bindWithDispatch method [\#25](https://github.com/feathersjs/feathers-redux/pull/25) ([zusamann](https://github.com/zusamann))
+
+**Closed issues:**
+
+- The State is not reactive [\#23](https://github.com/feathersjs/feathers-redux/issues/23)
+- Action Type Namespace [\#20](https://github.com/feathersjs/feathers-redux/issues/20)
+
 ## [v0.0.3](https://github.com/feathersjs/feathers-redux/tree/v0.0.3) (2017-06-22)
 [Full Changelog](https://github.com/feathersjs/feathers-redux/compare/v0.0.2...v0.0.3)
 
