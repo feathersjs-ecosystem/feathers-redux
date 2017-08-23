@@ -149,6 +149,13 @@ const reduxifyService = (app, route, name = route, options = {}) => {
   const RESET = `${SERVICE_NAME}RESET`;
   const STORE = `${SERVICE_NAME}STORE`;
 
+  const actionTypesForServiceMethod = (actionType) => ({
+    [`${actionType}`]: `${actionType}`,
+    [`${actionType}_${opts.PENDING}`]: `${actionType}_${opts.PENDING}`,
+    [`${actionType}_${opts.FULFILLED}`]: `${actionType}_${opts.FULFILLED}`,
+    [`${actionType}_${opts.REJECTED}`]: `${actionType}_${opts.REJECTED}`,
+  });
+
   return {
     // ACTION CREATORS
     // Note: action.payload in reducer will have the value of .data below
@@ -161,6 +168,19 @@ const reduxifyService = (app, route, name = route, options = {}) => {
     reset: createAction(RESET),
     store: createAction(STORE, store => store),
     on: (event, data, fcn) => (dispatch, getState) => { fcn(event, data, dispatch, getState); },
+
+    // ACTION TYPES
+
+    types: {
+      ...actionTypesForServiceMethod(FIND),
+      ...actionTypesForServiceMethod(GET),
+      ...actionTypesForServiceMethod(CREATE),
+      ...actionTypesForServiceMethod(UPDATE),
+      ...actionTypesForServiceMethod(PATCH),
+      ...actionTypesForServiceMethod(REMOVE),
+      RESET,
+      STORE,
+    },
 
     // REDUCER
 

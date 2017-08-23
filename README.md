@@ -94,6 +94,16 @@ The default is
     get(id, params) {},
     store(object) {}, // Interface for realtime replication.
     reset() {}, // Reinitializes store for this service.
+    // action types
+    types: {
+      RESET: 'RESET',
+      STORE: 'STORE',
+      SERVICES_MESSAGES_FIND: 'SERVICES_MESSAGES_FIND',
+      SERVICES_MESSAGES_FIND_PENDING: 'SERVICES_MESSAGES_FIND_PENDING',
+      SERVICES_MESSAGES_FIND_FULFILLED: 'SERVICES_MESSAGES_FIND_FULFILLED',
+      SERVICES_MESSAGES_FIND_REJECTED: 'SERVICES_MESSAGES_FIND_REJECTED',
+      // same for all methods GET, CREATE...
+    },
     // reducer
     reducer() {}, // Reducers handling actions MESSAGES_CREATE_PENDING, _FULFILLED, and _REJECTED.
   },
@@ -116,6 +126,13 @@ combineReducers({
 
 > **ProTip:** You have to include `redux-promise-middleware` and `redux-thunk`
 in your middleware.
+
+You may listen to actions dispatched by `feathers-redux`, for example to manage your side-effects. With `redux-saga`, it would be done with:
+```javascript
+yield take(services.users.types.SERVICES_USERS_CREATE_FULFILLED, function*(action) {
+  // do something when user gets created
+});
+```
 
 ## Documentation: getServicesStatus
 
