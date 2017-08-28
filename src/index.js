@@ -102,7 +102,7 @@ const reduxifyService = (app, route, name = route, options = {}) => {
         [opts.isLoading]: ifLoading,
         [opts.isSaving]: !ifLoading,
         [opts.isFinished]: false,
-        [opts.data]: null,
+        [opts.data]: state[opts.data] || null,
         [opts.queryResult]: state[opts.queryResult] || null //  leave previous to reduce redraw
       });
     },
@@ -153,7 +153,7 @@ const reduxifyService = (app, route, name = route, options = {}) => {
     [`${actionType}`]: `${actionType}`,
     [`${actionType}_${opts.PENDING}`]: `${actionType}_${opts.PENDING}`,
     [`${actionType}_${opts.FULFILLED}`]: `${actionType}_${opts.FULFILLED}`,
-    [`${actionType}_${opts.REJECTED}`]: `${actionType}_${opts.REJECTED}`,
+    [`${actionType}_${opts.REJECTED}`]: `${actionType}_${opts.REJECTED}`
   });
 
   return {
@@ -179,7 +179,7 @@ const reduxifyService = (app, route, name = route, options = {}) => {
       ...actionTypesForServiceMethod(PATCH),
       ...actionTypesForServiceMethod(REMOVE),
       RESET,
-      STORE,
+      STORE
     },
 
     // REDUCER
@@ -360,16 +360,13 @@ export const bindWithDispatch = (dispatch, services, targetActions) => {
     'logout'
   ];
 
-
   const _serviceNames = Object.keys(services);
   // map over the services object to get every service
   _serviceNames.forEach(_name => {
-
     const _methodNames = Object.keys(services[_name]);
 
     // map over every method in the service
     _methodNames.forEach(_method => {
-
       // if method is in targeted actions then replace it with bounded method
       if (targetActions.includes(_method)) {
         services[_name][_method] = bindActionCreators(
