@@ -56,7 +56,7 @@ __Options:__
 - `app` (*required*) - The Feathers client app.
 - `serviceNames` (*required*, string, array of strings, or object) - The
 paths of the Feathers services to reduxify.
-    - `'messages'` is short for `{ messages: 'messages }`.
+    - `'messages'` is short for `{ messages: 'messages' }`.
     You can dispatch calls with `dispatch(services.messages.create(data, params));`.
     - `['users', 'messages']` is short for `{ users: 'users', messages: 'messages' }`.
     - `{ '/buildings/:buildingid': 'buildings' }` will reduxify the Feathers service
