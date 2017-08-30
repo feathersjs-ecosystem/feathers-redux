@@ -71,6 +71,23 @@ describe('reduxify:reducer - array of paths', () => {
     });
   });
 
+  ['find', 'get', 'create', 'update', 'patch', 'remove'].forEach(method => {
+    describe(`does not change data for ${method}`, () => {
+      ['pending'].forEach(step => {
+        it(`for ${step}`, () => {
+          var validStates = getValidStates(false, false, false, true);
+          if (method === 'find') { validStates = getValidStates(true, true, false, true); }
+          if (method === 'get') { validStates = getValidStates(true, false, false, true); }
+
+          const state = services.users.reducer(
+            { data: { a: 'a' }, queryResult: null }, reducerActionType(method, step)
+          );
+          assert.deepEqual(state, validStates[step]);
+        });
+      });
+    });
+  });
+
   describe('for reset', () => {
     it('resets state', () => {
       const state = services.users.reducer({}, services.users.reset());
@@ -217,8 +234,9 @@ function reducerActionType (method, step) {
   };
 }
 
-function getValidStates (ifLoading, isFind, haveQueryResult) {
+function getValidStates (ifLoading, isFind, haveQueryResult, haveDataResult) {
   const qr = haveQueryResult ? [{ a: 'a' }] : null;
+  const dr = haveDataResult ? { a: 'a' } : null;
 
   return {
     pending: {
@@ -226,7 +244,7 @@ function getValidStates (ifLoading, isFind, haveQueryResult) {
       isLoading: ifLoading,
       isSaving: !ifLoading,
       isFinished: false,
-      data: null,
+      data: dr,
       queryResult: qr
 
     },
