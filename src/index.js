@@ -149,6 +149,13 @@ const reduxifyService = (app, route, name = route, options = {}) => {
   const RESET = `${SERVICE_NAME}RESET`;
   const STORE = `${SERVICE_NAME}STORE`;
 
+  // FEATHERS EVENT LISTENER ACTION TYPES
+  const ON_CREATED = `${SERVICE_NAME}ON_CREATED`;
+  const ON_UPDATED = `${SERVICE_NAME}ON_UPDATED`;
+  const ON_PATCHED = `${SERVICE_NAME}ON_PATCHED`;
+  const ON_REMOVED = `${SERVICE_NAME}ON_REMOVED`;
+
+
   const actionTypesForServiceMethod = (actionType) => ({
     [`${actionType}`]: `${actionType}`,
     [`${actionType}_${opts.PENDING}`]: `${actionType}_${opts.PENDING}`,
@@ -169,6 +176,11 @@ const reduxifyService = (app, route, name = route, options = {}) => {
     store: createAction(STORE, store => store),
     on: (event, data, fcn) => (dispatch, getState) => { fcn(event, data, dispatch, getState); },
 
+    onCreated: createAction(ON_CREATED, (payload) => ({ data: payload })),
+    onUpdated: createAction(ON_UPDATED, (payload) => ({ data: payload })),
+    onPatched: createAction(ON_PATCHED, (payload) => ({ data: payload })),
+    onRemoved: createAction(ON_REMOVED, (payload) => ({ data: payload })),
+    
     // ACTION TYPES
 
     types: {
@@ -179,7 +191,12 @@ const reduxifyService = (app, route, name = route, options = {}) => {
       ...actionTypesForServiceMethod(PATCH),
       ...actionTypesForServiceMethod(REMOVE),
       RESET,
-      STORE
+      STORE,
+  
+      ...actionTypesForServiceMethod(ON_CREATED),
+      ...actionTypesForServiceMethod(ON_UPDATED),
+      ...actionTypesForServiceMethod(ON_PATCHED),
+      ...actionTypesForServiceMethod(ON_REMOVED),
     },
 
     // REDUCER
