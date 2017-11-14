@@ -212,12 +212,11 @@ const reduxifyService = (app, route, name = route, options = {}) => {
 
         { [ON_CREATED]: (state, action) => {
           debug(`redux:${ON_CREATED}`, action);
-          const { data } = action.payload;
           
           return {
             ...state,
             [opts.queryResult]: Object.assign({}, state[opts.queryResult], {
-              data: state[opts.queryResult].data.concat(data),
+              data: state[opts.queryResult].data.concat(action.payload.data),
               total: state[opts.queryResult].total += 1
             }),
           };
@@ -225,14 +224,13 @@ const reduxifyService = (app, route, name = route, options = {}) => {
 
         { [ON_UPDATED]: (state, action) => {
           debug(`redux:${ON_UPDATED}`, action);
-          const { data } = action.payload;
 
           return {
             ...state,
             [opts.queryResult]: Object.assign({}, state[opts.queryResult], {
               data: state[opts.queryResult].data.map(item => {
-                if (item.id === data.id) {
-                  return data;
+                if (item.id === action.payload.data.id) {
+                  return action.payload.data;
                 }
                 return item;
               }),
@@ -242,14 +240,13 @@ const reduxifyService = (app, route, name = route, options = {}) => {
         
         { [ON_PATCHED]: (state, action) => {
           debug(`redux:${ON_PATCHED}`, action);
-          const { data } = action.payload;
 
           return {
             ...state,
             [opts.queryResult]: Object.assign({}, state[opts.queryResult], {
               data: state[opts.queryResult].data.map(item => {
-                if (item.id === data.id) {
-                  return data;
+                if (item.id === action.payload.data.id) {
+                  return action.payload.data;
                 }
                 return item;
               }),
@@ -259,8 +256,7 @@ const reduxifyService = (app, route, name = route, options = {}) => {
 
         { [ON_REMOVED]: (state, action) => {
           debug(`redux:${ON_REMOVED}`, action);
-          const { data } = action.payload;
-          const removeIndex = queryResult.data.findIndex(item => item.id === data.id);
+          const removeIndex = state.queryResult.data.findIndex(item => item.id === action.payload.data.id);
 
           return {
             ...state,
