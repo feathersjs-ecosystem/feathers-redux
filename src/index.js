@@ -155,7 +155,6 @@ const reduxifyService = (app, route, name = route, options = {}) => {
   const ON_PATCHED = `${SERVICE_NAME}ON_PATCHED`;
   const ON_REMOVED = `${SERVICE_NAME}ON_REMOVED`;
 
-
   const actionTypesForServiceMethod = (actionType) => ({
     [`${actionType}`]: `${actionType}`,
     [`${actionType}_${opts.PENDING}`]: `${actionType}_${opts.PENDING}`,
@@ -180,7 +179,7 @@ const reduxifyService = (app, route, name = route, options = {}) => {
     onUpdated: createAction(ON_UPDATED, (payload) => ({ data: payload })),
     onPatched: createAction(ON_PATCHED, (payload) => ({ data: payload })),
     onRemoved: createAction(ON_REMOVED, (payload) => ({ data: payload })),
-    
+
     // ACTION TYPES
 
     types: {
@@ -192,11 +191,11 @@ const reduxifyService = (app, route, name = route, options = {}) => {
       ...actionTypesForServiceMethod(REMOVE),
       RESET,
       STORE,
-  
+
       ...actionTypesForServiceMethod(ON_CREATED),
       ...actionTypesForServiceMethod(ON_UPDATED),
       ...actionTypesForServiceMethod(ON_PATCHED),
-      ...actionTypesForServiceMethod(ON_REMOVED),
+      ...actionTypesForServiceMethod(ON_REMOVED)
     },
 
     // REDUCER
@@ -212,13 +211,14 @@ const reduxifyService = (app, route, name = route, options = {}) => {
 
         { [ON_CREATED]: (state, action) => {
           debug(`redux:${ON_CREATED}`, action);
-          
+          const updatedResult = Object.assign({}, state[opts.queryResult], {
+            data: state[opts.queryResult].data.concat(action.payload.data),
+            total: state[opts.queryResult].total += 1
+          });
+
           return {
             ...state,
-            [opts.queryResult]: Object.assign({}, state[opts.queryResult], {
-              data: state[opts.queryResult].data.concat(action.payload.data),
-              total: state[opts.queryResult].total += 1
-            }),
+            [opts.queryResult]: updatedResult
           };
         } },
 
@@ -233,11 +233,11 @@ const reduxifyService = (app, route, name = route, options = {}) => {
                   return action.payload.data;
                 }
                 return item;
-              }),
-            }),
+              })
+            })
           };
         } },
-        
+
         { [ON_PATCHED]: (state, action) => {
           debug(`redux:${ON_PATCHED}`, action);
 
@@ -249,8 +249,8 @@ const reduxifyService = (app, route, name = route, options = {}) => {
                   return action.payload.data;
                 }
                 return item;
-              }),
-            }),
+              })
+            })
           };
         } },
 
@@ -264,8 +264,8 @@ const reduxifyService = (app, route, name = route, options = {}) => {
               data: [
                 ...state[opts.queryResult].data.slice(0, removeIndex),
                 ...state[opts.queryResult].data.slice(removeIndex + 1)
-              ],
-            }),
+              ]
+            })
           };
         } },
 
