@@ -81,7 +81,7 @@ const reduxifyService = (app, route, name = route, options = {}) => {
     PENDING: 'PENDING',
     FULFILLED: 'FULFILLED',
     REJECTED: 'REJECTED',
-    
+
     // individual pending/loading depending on the dispatched action
     createPending: 'createPending',
     findPending: 'findPending',
@@ -100,8 +100,8 @@ const reduxifyService = (app, route, name = route, options = {}) => {
   }
 
   const reducerForServiceMethod = (actionType, ifLoading, isFind) => {
-    const slicedActionType = actionType.slice(SERVICE_NAME.length, actionType.length).toLowerCase() // returns find/create/update/patch (etc.)
-    
+    const slicedActionType = actionType.slice(SERVICE_NAME.length, actionType.length).toLowerCase(); // returns find/create/update/patch (etc.)
+
     return {
       // promise has been started
       [`${actionType}_${opts.PENDING}`]: (state, action) => {
@@ -149,7 +149,7 @@ const reduxifyService = (app, route, name = route, options = {}) => {
           [opts[`${slicedActionType}Pending`]]: false
         };
       }
-    }
+    };
   };
 
   // ACTION TYPES
@@ -269,16 +269,17 @@ const reduxifyService = (app, route, name = route, options = {}) => {
         { [ON_REMOVED]: (state, action) => {
           debug(`redux:${ON_REMOVED}`, action);
           const removeIndex = state.queryResult.data.findIndex(item => item.id === action.payload.data.id);
+          const updatedResult = Object.assign({}, state[opts.queryResult], {
+            data: [
+              ...state[opts.queryResult].data.slice(0, removeIndex),
+              ...state[opts.queryResult].data.slice(removeIndex + 1)
+            ],
+            total: state[opts.queryResult].total -= 1
+          });
 
           return {
             ...state,
-            [opts.queryResult]: Object.assign({}, state[opts.queryResult], {
-              data: [
-                ...state[opts.queryResult].data.slice(0, removeIndex),
-                ...state[opts.queryResult].data.slice(removeIndex + 1)
-              ],
-              total: state[opts.queryResult].total -= 1
-            })
+            [opts.queryResult]: updatedResult
           };
         } },
 
