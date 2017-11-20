@@ -276,7 +276,8 @@ const reduxifyService = (app, route, name = route, options = {}) => {
               data: [
                 ...state[opts.queryResult].data.slice(0, removeIndex),
                 ...state[opts.queryResult].data.slice(removeIndex + 1)
-              ]
+              ],
+              total: state[opts.queryResult].total -= 1
             })
           };
         } },
