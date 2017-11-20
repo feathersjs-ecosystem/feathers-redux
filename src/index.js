@@ -1,4 +1,3 @@
-
 import { createAction, handleActions } from 'redux-actions';
 import { bindActionCreators } from 'redux';
 import makeDebug from 'debug';
@@ -81,7 +80,15 @@ const reduxifyService = (app, route, name = route, options = {}) => {
     store: 'store',
     PENDING: 'PENDING',
     FULFILLED: 'FULFILLED',
-    REJECTED: 'REJECTED'
+    REJECTED: 'REJECTED',
+    
+    // individual pending/loading depending on the dispatched action
+    createPending: 'createPending',
+    findPending: 'findPending',
+    getPending: 'getPending',
+    updatePending: 'updatePending',
+    patchPending: 'patchPending',
+    removePending: 'removePending'
   };
   const opts = Object.assign({}, defaults, options);
   const SERVICE_NAME = `SERVICES_${name.toUpperCase()}_`;
@@ -92,51 +99,58 @@ const reduxifyService = (app, route, name = route, options = {}) => {
     throw Error(`Feathers service '${route} does not exist.`);
   }
 
-  const reducerForServiceMethod = (actionType, ifLoading, isFind) => ({
-    // promise has been started
-    [`${actionType}_${opts.PENDING}`]: (state, action) => {
-      debug(`redux:${actionType}_${opts.PENDING}`, action);
-      return ({
-        ...state,
-        [opts.isError]: null,
-        [opts.isLoading]: ifLoading,
-        [opts.isSaving]: !ifLoading,
-        [opts.isFinished]: false,
-        [opts.data]: state[opts.data] || null,
-        [opts.queryResult]: state[opts.queryResult] || null //  leave previous to reduce redraw
-      });
-    },
+  const reducerForServiceMethod = (actionType, ifLoading, isFind) => {
+    const slicedActionType = actionType.slice(SERVICE_NAME.length, actionType.length).toLowerCase() // returns find/create/update/patch (etc.)
+    
+    return {
+      // promise has been started
+      [`${actionType}_${opts.PENDING}`]: (state, action) => {
+        debug(`redux:${actionType}_${opts.PENDING}`, action);
+        return ({
+          ...state,
+          [opts.isError]: null,
+          [opts.isLoading]: ifLoading,
+          [opts.isSaving]: !ifLoading,
+          [opts.isFinished]: false,
+          [opts.data]: state[opts.data] || null,
+          [opts.queryResult]: state[opts.queryResult] || null, //  leave previous to reduce redraw
+          [opts[`${slicedActionType}Pending`]]: true
+        });
+      },
 
-    // promise resolved
-    [`${actionType}_${opts.FULFILLED}`]: (state, action) => {
-      debug(`redux:${actionType}_${opts.FULFILLED}`, action);
-      return {
-        ...state,
-        [opts.isError]: null,
-        [opts.isLoading]: false,
-        [opts.isSaving]: false,
-        [opts.isFinished]: true,
-        [opts.data]: !isFind ? action.payload : null,
-        [opts.queryResult]: isFind ? action.payload : (state[opts.queryResult] || null)
-      };
-    },
+      // promise resolved
+      [`${actionType}_${opts.FULFILLED}`]: (state, action) => {
+        debug(`redux:${actionType}_${opts.FULFILLED}`, action);
+        return {
+          ...state,
+          [opts.isError]: null,
+          [opts.isLoading]: false,
+          [opts.isSaving]: false,
+          [opts.isFinished]: true,
+          [opts.data]: !isFind ? action.payload : null,
+          [opts.queryResult]: isFind ? action.payload : (state[opts.queryResult] || null),
+          [opts[`${slicedActionType}Pending`]]: false
+        };
+      },
 
-    // promise rejected
-    [`${actionType}_${opts.REJECTED}`]: (state, action) => {
-      debug(`redux:${actionType}_${opts.REJECTED}`, action);
-      return {
-        ...state,
-        // action.payload = { name: "NotFound", message: "No record found for id 'G6HJ45'",
-        //   code:404, className: "not-found" }
-        [opts.isError]: action.payload,
-        [opts.isLoading]: false,
-        [opts.isSaving]: false,
-        [opts.isFinished]: true,
-        [opts.data]: null,
-        [opts.queryResult]: isFind ? null : (state[opts.queryResult] || null)
-      };
+      // promise rejected
+      [`${actionType}_${opts.REJECTED}`]: (state, action) => {
+        debug(`redux:${actionType}_${opts.REJECTED}`, action);
+        return {
+          ...state,
+          // action.payload = { name: "NotFound", message: "No record found for id 'G6HJ45'",
+          //   code:404, className: "not-found" }
+          [opts.isError]: action.payload,
+          [opts.isLoading]: false,
+          [opts.isSaving]: false,
+          [opts.isFinished]: true,
+          [opts.data]: null,
+          [opts.queryResult]: isFind ? null : (state[opts.queryResult] || null),
+          [opts[`${slicedActionType}Pending`]]: false
+        };
+      }
     }
-  });
+  };
 
   // ACTION TYPES
 
@@ -181,7 +195,6 @@ const reduxifyService = (app, route, name = route, options = {}) => {
     onRemoved: createAction(ON_REMOVED, (payload) => ({ data: payload })),
 
     // ACTION TYPES
-
     types: {
       ...actionTypesForServiceMethod(FIND),
       ...actionTypesForServiceMethod(GET),
@@ -199,7 +212,6 @@ const reduxifyService = (app, route, name = route, options = {}) => {
     },
 
     // REDUCER
-
     reducer: handleActions(
       Object.assign({},
         reducerForServiceMethod(FIND, true, true),
