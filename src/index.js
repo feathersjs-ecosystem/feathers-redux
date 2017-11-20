@@ -149,6 +149,12 @@ const reduxifyService = (app, route, name = route, options = {}) => {
   const RESET = `${SERVICE_NAME}RESET`;
   const STORE = `${SERVICE_NAME}STORE`;
 
+  // FEATHERS EVENT LISTENER ACTION TYPES
+  const ON_CREATED = `${SERVICE_NAME}ON_CREATED`;
+  const ON_UPDATED = `${SERVICE_NAME}ON_UPDATED`;
+  const ON_PATCHED = `${SERVICE_NAME}ON_PATCHED`;
+  const ON_REMOVED = `${SERVICE_NAME}ON_REMOVED`;
+
   const actionTypesForServiceMethod = (actionType) => ({
     [`${actionType}`]: `${actionType}`,
     [`${actionType}_${opts.PENDING}`]: `${actionType}_${opts.PENDING}`,
@@ -169,6 +175,11 @@ const reduxifyService = (app, route, name = route, options = {}) => {
     store: createAction(STORE, store => store),
     on: (event, data, fcn) => (dispatch, getState) => { fcn(event, data, dispatch, getState); },
 
+    onCreated: createAction(ON_CREATED, (payload) => ({ data: payload })),
+    onUpdated: createAction(ON_UPDATED, (payload) => ({ data: payload })),
+    onPatched: createAction(ON_PATCHED, (payload) => ({ data: payload })),
+    onRemoved: createAction(ON_REMOVED, (payload) => ({ data: payload })),
+
     // ACTION TYPES
 
     types: {
@@ -179,7 +190,12 @@ const reduxifyService = (app, route, name = route, options = {}) => {
       ...actionTypesForServiceMethod(PATCH),
       ...actionTypesForServiceMethod(REMOVE),
       RESET,
-      STORE
+      STORE,
+
+      ...actionTypesForServiceMethod(ON_CREATED),
+      ...actionTypesForServiceMethod(ON_UPDATED),
+      ...actionTypesForServiceMethod(ON_PATCHED),
+      ...actionTypesForServiceMethod(ON_REMOVED)
     },
 
     // REDUCER
@@ -192,6 +208,66 @@ const reduxifyService = (app, route, name = route, options = {}) => {
         reducerForServiceMethod(UPDATE, false),
         reducerForServiceMethod(PATCH, false),
         reducerForServiceMethod(REMOVE, false),
+
+        { [ON_CREATED]: (state, action) => {
+          debug(`redux:${ON_CREATED}`, action);
+          const updatedResult = Object.assign({}, state[opts.queryResult], {
+            data: state[opts.queryResult].data.concat(action.payload.data),
+            total: state[opts.queryResult].total += 1
+          });
+
+          return {
+            ...state,
+            [opts.queryResult]: updatedResult
+          };
+        } },
+
+        { [ON_UPDATED]: (state, action) => {
+          debug(`redux:${ON_UPDATED}`, action);
+
+          return {
+            ...state,
+            [opts.queryResult]: Object.assign({}, state[opts.queryResult], {
+              data: state[opts.queryResult].data.map(item => {
+                if (item.id === action.payload.data.id) {
+                  return action.payload.data;
+                }
+                return item;
+              })
+            })
+          };
+        } },
+
+        { [ON_PATCHED]: (state, action) => {
+          debug(`redux:${ON_PATCHED}`, action);
+
+          return {
+            ...state,
+            [opts.queryResult]: Object.assign({}, state[opts.queryResult], {
+              data: state[opts.queryResult].data.map(item => {
+                if (item.id === action.payload.data.id) {
+                  return action.payload.data;
+                }
+                return item;
+              })
+            })
+          };
+        } },
+
+        { [ON_REMOVED]: (state, action) => {
+          debug(`redux:${ON_REMOVED}`, action);
+          const removeIndex = state.queryResult.data.findIndex(item => item.id === action.payload.data.id);
+
+          return {
+            ...state,
+            [opts.queryResult]: Object.assign({}, state[opts.queryResult], {
+              data: [
+                ...state[opts.queryResult].data.slice(0, removeIndex),
+                ...state[opts.queryResult].data.slice(removeIndex + 1)
+              ]
+            })
+          };
+        } },
 
         // reset status if no promise is pending
         { [RESET]: (state, action) => {
