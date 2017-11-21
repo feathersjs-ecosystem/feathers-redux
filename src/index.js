@@ -80,8 +80,9 @@ const reduxifyService = (app, route, name = route, options = {}) => {
     store: 'store',
     PENDING: 'PENDING',
     FULFILLED: 'FULFILLED',
-    REJECTED: 'REJECTED',
-
+    REJECTED: 'REJECTED'
+  };
+  const pendingDefaults = {
     // individual pending/loading depending on the dispatched action
     createPending: 'createPending',
     findPending: 'findPending',
@@ -90,7 +91,21 @@ const reduxifyService = (app, route, name = route, options = {}) => {
     patchPending: 'patchPending',
     removePending: 'removePending'
   };
-  const opts = Object.assign({}, defaults, options);
+
+  const opts = Object.assign({}, defaults, pendingDefaults, options);
+
+  const getPendingDefaults = (slicedActionType) => {
+    let result = {};
+    for (let key in pendingDefaults) {
+      if (`${slicedActionType}Pending` === pendingDefaults[key]) {
+        result[key] = true;
+      } else {
+        result[key] = false;
+      }
+    }
+    return result;
+  };
+
   const SERVICE_NAME = `SERVICES_${name.toUpperCase()}_`;
 
   const service = app.service(route);
@@ -101,6 +116,7 @@ const reduxifyService = (app, route, name = route, options = {}) => {
 
   const reducerForServiceMethod = (actionType, ifLoading, isFind) => {
     const slicedActionType = actionType.slice(SERVICE_NAME.length, actionType.length).toLowerCase(); // returns find/create/update/patch (etc.)
+    const pendingResults = getPendingDefaults(slicedActionType);
 
     return {
       // promise has been started
@@ -108,13 +124,14 @@ const reduxifyService = (app, route, name = route, options = {}) => {
         debug(`redux:${actionType}_${opts.PENDING}`, action);
         return ({
           ...state,
+          ...pendingResults,
+
           [opts.isError]: null,
           [opts.isLoading]: ifLoading,
           [opts.isSaving]: !ifLoading,
           [opts.isFinished]: false,
           [opts.data]: state[opts.data] || null,
-          [opts.queryResult]: state[opts.queryResult] || null, //  leave previous to reduce redraw
-          [opts[`${slicedActionType}Pending`]]: true
+          [opts.queryResult]: state[opts.queryResult] || null //  leave previous to reduce redraw
         });
       },
 
@@ -320,7 +337,14 @@ const reduxifyService = (app, route, name = route, options = {}) => {
         [opts.isFinished]: false,
         [opts.data]: null,
         [opts.queryResult]: null,
-        [opts.store]: null
+        [opts.store]: null,
+
+        [opts.createPending]: false,
+        [opts.findPending]: false,
+        [opts.getPending]: false,
+        [opts.updatePending]: false,
+        [opts.patchPending]: false,
+        [opts.removePending]: false
       }
     )
   };
