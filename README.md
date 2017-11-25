@@ -240,6 +240,34 @@ services.messages.find();
 services.messages.create({ text: 'Hello!' });
 ```
 
+## Realtime Feathers Updates
+
+If any of your services need real time updates, you can dispatch any of the following actions depending on your use case:
+```javascript
+    dispatch(services.messages.onCreated(data));
+    dispatch(services.messages.onUpdated(data));
+    dispatch(services.messages.onPatched(data));
+    dispatch(services.messages.onRemoved(data));
+```
+
+In order for the redux store to update in realtime, these action dispatches should be encapsulated within feathers `service.on()` event listener:
+```javascript
+ const messages = app.service('/messages');
+
+ messages.on('created', (data) => {
+      dispatch(services.messages.onCreated(data));
+  })
+  messages.on('updated', (data) => {
+      dispatch(services.messages.onUpdated(data));
+  })
+  messages.on('patched', (data) => {
+      dispatch(services.messages.onPatched(data));
+  })
+  messages.on('removed', (data) => {
+      dispatch(services.messages.onRemoved(data));
+  })
+```
+
 ## Examples
 
 `example/` contains an example you may run. Its README has instructions.
