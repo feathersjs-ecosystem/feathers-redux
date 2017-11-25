@@ -268,6 +268,30 @@ In order for the redux store to update in realtime, these action dispatches shou
   })
 ```
 
+## Action Pending/Loading
+
+The following properties exist in all of the feather services:
+```javascript
+  const pendingDefaults = {
+    createPending: false,
+    findPending: false,
+    getPending: false,
+    updatePending: false,
+    patchPending: false,
+    removePending: false
+  };
+```
+
+The service pending state will be updated according to the dispatched action.
+```javascript
+    dispatch(services.messages.create({ text: 'Hello!' })) `will update the state to:` createPending: true
+    dispatch(services.messages.find()) `will update the state to:` findPending: true 
+    dispatch(services.messages.get('557XxUL8PalGMgOo')) `will update the state to:` getPending: true
+    dispatch(services.messages.update(id, data) `will update the state to:` updatePending: true
+    dispatch(services.messages.patch(id, data) `will update the state to:` patchPending: true
+    dispatch(services.messages.remove(id, params) `will update the state to:` removePending: true
+```
+
 ## Examples
 
 `example/` contains an example you may run. Its README has instructions.
