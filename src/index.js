@@ -242,7 +242,7 @@ const reduxifyService = (app, route, name = route, options = {}) => {
           debug(`redux:${ON_CREATED}`, action);
           const updatedResult = Object.assign({}, state[opts.queryResult], {
             data: state[opts.queryResult].data.concat(action.payload.data),
-            total: state[opts.queryResult].total += 1
+            total: state[opts.queryResult].total + 1
           });
 
           return {
@@ -291,7 +291,7 @@ const reduxifyService = (app, route, name = route, options = {}) => {
               ...state[opts.queryResult].data.slice(0, removeIndex),
               ...state[opts.queryResult].data.slice(removeIndex + 1)
             ],
-            total: state[opts.queryResult].total -= 1
+            total: state[opts.queryResult].total - 1
           });
 
           return {
