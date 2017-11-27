@@ -240,6 +240,58 @@ services.messages.find();
 services.messages.create({ text: 'Hello!' });
 ```
 
+## Realtime Feathers Updates
+
+If any of your services need real time updates, you can dispatch any of the following actions depending on your use case:
+```javascript
+    dispatch(services.messages.onCreated(data));
+    dispatch(services.messages.onUpdated(data));
+    dispatch(services.messages.onPatched(data));
+    dispatch(services.messages.onRemoved(data));
+```
+
+In order for the redux store to update in realtime, these action dispatches should be encapsulated within feathers `service.on()` event listener:
+```javascript
+ const messages = app.service('/messages');
+
+ messages.on('created', (data) => {
+      dispatch(services.messages.onCreated(data));
+  })
+  messages.on('updated', (data) => {
+      dispatch(services.messages.onUpdated(data));
+  })
+  messages.on('patched', (data) => {
+      dispatch(services.messages.onPatched(data));
+  })
+  messages.on('removed', (data) => {
+      dispatch(services.messages.onRemoved(data));
+  })
+```
+
+## Action Pending/Loading
+
+The following properties exist in all of the feather services:
+```javascript
+  const pendingDefaults = {
+    createPending: false,
+    findPending: false,
+    getPending: false,
+    updatePending: false,
+    patchPending: false,
+    removePending: false
+  };
+```
+
+The service pending state will be updated according to the dispatched action.
+```javascript
+    dispatch(services.messages.create({ text: 'Hello!' })) `will update the state to:` createPending: true
+    dispatch(services.messages.find()) `will update the state to:` findPending: true 
+    dispatch(services.messages.get('557XxUL8PalGMgOo')) `will update the state to:` getPending: true
+    dispatch(services.messages.update(id, data) `will update the state to:` updatePending: true
+    dispatch(services.messages.patch(id, data) `will update the state to:` patchPending: true
+    dispatch(services.messages.remove(id, params) `will update the state to:` removePending: true
+```
+
 ## Examples
 
 `example/` contains an example you may run. Its README has instructions.
