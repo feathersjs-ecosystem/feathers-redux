@@ -295,7 +295,7 @@ function getPendingDefaults (actionType) {
     }
   }
   return result;
-};
+}
 
 const pendingDefaults = {
   createPending: false,
