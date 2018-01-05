@@ -34,6 +34,9 @@ class App extends Component {
           <button onClick={this.props.onFind}>Retrieve all messages</button>
           <br />
           <br />
+          <button onClick={this.props.onReset}>Reset messages</button>
+          <br />
+          <br />
         </div>
         <br />
         <div className="App-status">
@@ -95,6 +98,9 @@ const mapDispatchToProps = (dispatch, { services }) => ({
   },
   onFind: () => {
     dispatch(services.messages.find());
+  },
+  onReset: () => {
+    dispatch(services.messages.reset());
   },
 });
 
