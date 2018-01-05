@@ -92,6 +92,13 @@ const reduxifyService = (app, route, name = route, options = {}) => {
     removePending: 'removePending'
   };
 
+  const queryResultDefaults = {
+    total: 0,
+    limit: 0,
+    skip: 0,
+    data: []
+  };
+
   const opts = Object.assign({}, defaults, pendingDefaults, options);
 
   const getPendingDefaults = (slicedActionType) => {
@@ -316,7 +323,7 @@ const reduxifyService = (app, route, name = route, options = {}) => {
             [opts.isSaving]: false,
             [opts.isFinished]: false,
             [opts.data]: null,
-            [opts.queryResult]: action.payload ? state[opts.queryResult] : null,
+            [opts.queryResult]: action.payload ? state[opts.queryResult] : queryResultDefaults,
             [opts.store]: null
           };
         } },
@@ -337,12 +344,7 @@ const reduxifyService = (app, route, name = route, options = {}) => {
         [opts.isSaving]: false,
         [opts.isFinished]: false,
         [opts.data]: null,
-        [opts.queryResult]: {
-          total: 0,
-          limit: 0,
-          skip: 0,
-          data: []
-        },
+        [opts.queryResult]: queryResultDefaults,
         [opts.store]: null,
 
         [opts.createPending]: false,
