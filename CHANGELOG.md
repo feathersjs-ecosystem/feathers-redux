@@ -1,5 +1,13 @@
 # Change Log
 
+## [v2.1.0](https://github.com/feathers-plus/feathers-redux/tree/v2.1.0) (2018-01-10)
+[Full Changelog](https://github.com/feathers-plus/feathers-redux/compare/v2.0.0...v2.1.0)
+
+**Merged pull requests:**
+
+- adds idField option [\#45](https://github.com/feathers-plus/feathers-redux/pull/45) ([erkkaha](https://github.com/erkkaha))
+- Replace initial state of queryResult from null to proper object structure [\#43](https://github.com/feathers-plus/feathers-redux/pull/43) ([bsubedi26](https://github.com/bsubedi26))
+
 ## [v2.0.0](https://github.com/feathers-plus/feathers-redux/tree/v2.0.0) (2017-11-27)
 [Full Changelog](https://github.com/feathers-plus/feathers-redux/compare/v1.1.0...v2.0.0)
 
