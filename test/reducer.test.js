@@ -33,7 +33,12 @@ describe('reduxify:reducer - array of paths', () => {
       isSaving: false,
       isFinished: false,
       data: null,
-      queryResult: null,
+      queryResult: {
+        total: 0,
+        limit: 0,
+        skip: 0,
+        data: []
+      },
       store: null,
       ...pendingDefaults
     });
@@ -114,7 +119,12 @@ describe('reduxify:reducer - array of paths', () => {
         isSaving: false,
         isFinished: false,
         data: null,
-        queryResult: null,
+        queryResult: {
+          total: 0,
+          limit: 0,
+          skip: 0,
+          data: []
+        },
         store: null
       });
     });
@@ -139,7 +149,12 @@ describe('reduxify:reducer - array of paths', () => {
         isSaving: false,
         isFinished: false,
         data: null,
-        queryResult: null,
+        queryResult: {
+          total: 0,
+          limit: 0,
+          skip: 0,
+          data: []
+        },
         store: null
       });
     });
@@ -198,7 +213,12 @@ describe('reduxify:reducer - single path', () => {
       isSaving: false,
       isFinished: false,
       data: null,
-      queryResult: null,
+      queryResult: {
+        total: 0,
+        limit: 0,
+        skip: 0,
+        data: []
+      },
       store: null,
       ...pendingDefaults
     });
@@ -232,7 +252,12 @@ describe('reduxify:reducer - path & convenience name', () => {
       isSaving: false,
       isFinished: false,
       data: null,
-      queryResult: null,
+      queryResult: {
+        total: 0,
+        limit: 0,
+        skip: 0,
+        data: []
+      },
       store: null,
       ...pendingDefaults
     });

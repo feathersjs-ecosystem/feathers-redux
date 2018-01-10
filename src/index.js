@@ -93,6 +93,13 @@ const reduxifyService = (app, route, name = route, options = {}) => {
     removePending: 'removePending'
   };
 
+  const queryResultDefaults = {
+    total: 0,
+    limit: 0,
+    skip: 0,
+    data: []
+  };
+
   const opts = Object.assign({}, defaults, pendingDefaults, options);
 
   const getPendingDefaults = (slicedActionType) => {
@@ -241,6 +248,7 @@ const reduxifyService = (app, route, name = route, options = {}) => {
 
         { [ON_CREATED]: (state, action) => {
           debug(`redux:${ON_CREATED}`, action);
+
           const updatedResult = Object.assign({}, state[opts.queryResult], {
             data: state[opts.queryResult].data.concat(action.payload.data),
             total: state[opts.queryResult].total + 1
@@ -316,7 +324,7 @@ const reduxifyService = (app, route, name = route, options = {}) => {
             [opts.isSaving]: false,
             [opts.isFinished]: false,
             [opts.data]: null,
-            [opts.queryResult]: action.payload ? state[opts.queryResult] : null,
+            [opts.queryResult]: action.payload ? state[opts.queryResult] : queryResultDefaults,
             [opts.store]: null
           };
         } },
@@ -337,7 +345,7 @@ const reduxifyService = (app, route, name = route, options = {}) => {
         [opts.isSaving]: false,
         [opts.isFinished]: false,
         [opts.data]: null,
-        [opts.queryResult]: null,
+        [opts.queryResult]: queryResultDefaults,
         [opts.store]: null,
 
         [opts.createPending]: false,
