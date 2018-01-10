@@ -67,6 +67,7 @@ and for string fragments in the action constants.
 The default is
 ```javascript
 { // Names of props for service's Redux state
+  idField: 'id',
   isError: 'isError', // e.g. state.messages.isError
   isLoading: 'isLoading',
   isSaving: 'isSaving',
@@ -267,6 +268,8 @@ In order for the redux store to update in realtime, these action dispatches shou
       dispatch(services.messages.onRemoved(data));
   })
 ```
+
+Note: `idField` is used to match events with correct objects.
 
 ## Action Pending/Loading
 
