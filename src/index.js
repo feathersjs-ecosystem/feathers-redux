@@ -71,6 +71,7 @@ const reduxifyService = (app, route, name = route, options = {}) => {
   debug(`route ${route}`);
 
   const defaults = {
+    idField: 'id',
     isError: 'isError',
     isLoading: 'isLoading',
     isSaving: 'isSaving',
@@ -258,7 +259,7 @@ const reduxifyService = (app, route, name = route, options = {}) => {
             ...state,
             [opts.queryResult]: Object.assign({}, state[opts.queryResult], {
               data: state[opts.queryResult].data.map(item => {
-                if (item.id === action.payload.data.id) {
+                if (item[opts.idField] === action.payload.data[opts.idField]) {
                   return action.payload.data;
                 }
                 return item;
@@ -274,7 +275,7 @@ const reduxifyService = (app, route, name = route, options = {}) => {
             ...state,
             [opts.queryResult]: Object.assign({}, state[opts.queryResult], {
               data: state[opts.queryResult].data.map(item => {
-                if (item.id === action.payload.data.id) {
+                if (item[opts.idField] === action.payload.data[opts.idField]) {
                   return action.payload.data;
                 }
                 return item;
@@ -285,7 +286,7 @@ const reduxifyService = (app, route, name = route, options = {}) => {
 
         { [ON_REMOVED]: (state, action) => {
           debug(`redux:${ON_REMOVED}`, action);
-          const removeIndex = state.queryResult.data.findIndex(item => item.id === action.payload.data.id);
+          const removeIndex = state.queryResult.data.findIndex(item => item[opts.idField] === action.payload.data[opts.idField]);
           const updatedResult = Object.assign({}, state[opts.queryResult], {
             data: [
               ...state[opts.queryResult].data.slice(0, removeIndex),
