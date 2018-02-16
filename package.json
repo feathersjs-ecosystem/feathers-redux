@@ -50,9 +50,11 @@
     "lib": "lib"
   },
   "dependencies": {
+    "@feathersjs/commons": "^1.4.0",
     "debug": "^2.6.8",
     "redux": "^3.7.2",
-    "redux-actions": "^2.0.3"
+    "redux-actions": "^2.0.3",
+    "sift": "^5.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",

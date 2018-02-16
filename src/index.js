@@ -1,6 +1,9 @@
 import { createAction, handleActions } from 'redux-actions';
 import { bindActionCreators } from 'redux';
 import makeDebug from 'debug';
+import sift from 'sift';
+import { _, filterQuery } from '@feathersjs/commons';
+import { sorter } from '@feathersjs/commons/lib/utils';
 
 /**
  * Build a Redux compatible wrapper around a Feathers service.
@@ -214,7 +217,7 @@ const reduxifyService = (app, route, name = route, options = {}) => {
     store: createAction(STORE, store => store),
     on: (event, data, fcn) => (dispatch, getState) => { fcn(event, data, dispatch, getState); },
 
-    onCreated: createAction(ON_CREATED, (payload) => ({ data: payload })),
+    onCreated: createAction(ON_CREATED, (payload, query) => ({ data: payload, query })),
     onUpdated: createAction(ON_UPDATED, (payload) => ({ data: payload })),
     onPatched: createAction(ON_PATCHED, (payload) => ({ data: payload })),
     onRemoved: createAction(ON_REMOVED, (payload) => ({ data: payload })),
@@ -256,7 +259,7 @@ const reduxifyService = (app, route, name = route, options = {}) => {
 
           return {
             ...state,
-            [opts.queryResult]: updatedResult
+            [opts.queryResult]: filter(action.payload.query, updatedResult)
           };
         } },
 
@@ -501,4 +504,35 @@ export const bindWithDispatch = (dispatch, services, targetActions) => {
   });
 
   return services;
+};
+
+const filter = (criteria, queryResult) => {
+  const { query, filters } = filterQuery(criteria || {});
+  let values = _.values(queryResult.data);
+  values = sift(query, values);
+
+  const total = values.length;
+
+  if (filters.$sort) {
+    values.sort(sorter(filters.$sort));
+  }
+
+  if (filters.$skip) {
+    values = values.slice(filters.$skip);
+  }
+
+  if (typeof filters.$limit !== 'undefined') {
+    values = values.slice(0, filters.$limit);
+  }
+
+  if (filters.$select) {
+    values = values.map(value => _.pick(value, ...filters.$select));
+  }
+
+  return {
+    total,
+    limit: filters.$limit || 0,
+    skip: filters.$skip || 0,
+    data: values
+  };
 };
