@@ -251,12 +251,12 @@ const reduxifyService = (app, route, name = route, options = {}) => {
 
         { [ON_CREATED]: (state, action) => {
           debug(`redux:${ON_CREATED}`, action);
-          
+
           const updatedResult = Object.assign({}, state[opts.queryResult], {
             data: state[opts.queryResult].data.concat(action.payload.data),
             total: state[opts.queryResult].total + 1
           });
-          
+
           return {
             ...state,
             [opts.queryResult]: filter(action.payload.query, updatedResult)
@@ -510,7 +510,7 @@ const filter = (criteria, queryResult) => {
   const { query, filters } = filterQuery(criteria || {});
   let values = _.values(queryResult.data);
   values = sift(query, values);
-  
+
   const total = values.length;
 
   if (filters.$sort) {
@@ -528,11 +528,11 @@ const filter = (criteria, queryResult) => {
   if (filters.$select) {
     values = values.map(value => _.pick(value, ...filters.$select));
   }
-  
+
   return {
     total,
     limit: filters.$limit || 0,
     skip: filters.$skip || 0,
     data: values
-  }
-}
+  };
+};
