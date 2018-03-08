@@ -20,8 +20,8 @@ On client:
 import reduxifyServices from 'feathers-redux';
 const feathersClient = feathers(). ...;
 
-// Create Redux actions and reducers for Feathers services
-const services = reduxifyServices(feathersClient, ['users', 'messages']);
+// Create Redux actions and reducers for Feathers services (mind the object notation for ugly URLs)
+const services = reduxifyServices(feathersClient, ['users', 'messages', {'UGLY_SERVICE_URL/:PARAMETER': 'something'}]);
 
 // Configure Redux store & reducers
 export default combineReducers({
