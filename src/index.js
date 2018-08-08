@@ -152,7 +152,7 @@ const reduxifyService = (app, route, name = route, options = {}) => {
           [opts.isLoading]: false,
           [opts.isSaving]: false,
           [opts.isFinished]: true,
-          [opts.data]: !isFind ? action.payload : null,
+          [opts.data]: !isFind ? action.payload : (state[opts.data] || null),
           [opts.queryResult]: isFind ? action.payload : (state[opts.queryResult] || null),
           [opts[`${slicedActionType}Pending`]]: false
         };
