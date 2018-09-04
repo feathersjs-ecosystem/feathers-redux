@@ -50,7 +50,7 @@
     "lib": "lib"
   },
   "peerDependencies": {
-    "redux": "*",
+    "redux": "*"
   },
   "dependencies": {
     "debug": "^2.6.8",
