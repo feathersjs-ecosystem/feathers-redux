@@ -4,7 +4,7 @@ const feathers = require('feathers');
 const memory = require('feathers-memory');
 const Realtime = require('feathers-offline-realtime');
 
-const configureStore = require('./client/store');
+const configureStore = require('./client/store').default;
 const { default: reduxifyServices, getServicesStatus } = require('../src');
 
 const initServiceState = {
