@@ -1,5 +1,12 @@
 # Change Log
 
+## [v3.0.0](https://github.com/feathers-plus/feathers-redux/tree/v3.0.0) (2018-09-25)
+[Full Changelog](https://github.com/feathers-plus/feathers-redux/compare/v2.1.2...v3.0.0)
+
+**Merged pull requests:**
+
+- Move redux to peerDependencies \(\#54\) [\#55](https://github.com/feathers-plus/feathers-redux/pull/55) ([petermikitsh](https://github.com/petermikitsh))
+
 ## [v2.1.2](https://github.com/feathers-plus/feathers-redux/tree/v2.1.2) (2018-09-25)
 [Full Changelog](https://github.com/feathers-plus/feathers-redux/compare/v2.1.1...v2.1.2)
 
