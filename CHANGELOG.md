@@ -1,5 +1,22 @@
 # Change Log
 
+## [v2.1.2](https://github.com/feathers-plus/feathers-redux/tree/v2.1.2) (2018-09-25)
+[Full Changelog](https://github.com/feathers-plus/feathers-redux/compare/v2.1.1...v2.1.2)
+
+## [v2.1.1](https://github.com/feathers-plus/feathers-redux/tree/v2.1.1) (2018-09-25)
+[Full Changelog](https://github.com/feathers-plus/feathers-redux/compare/v2.1.0...v2.1.1)
+
+**Closed issues:**
+
+- Is this project abandoned? [\#51](https://github.com/feathers-plus/feathers-redux/issues/51)
+- Is it working with feathers-rest-client? [\#47](https://github.com/feathers-plus/feathers-redux/issues/47)
+- SSR Support [\#44](https://github.com/feathers-plus/feathers-redux/issues/44)
+- Error with ON\_CREATED & co. reducers, when queryResult is null [\#42](https://github.com/feathers-plus/feathers-redux/issues/42)
+
+**Merged pull requests:**
+
+- Babel 7: use transform-runtime to externalize babel helper fns [\#57](https://github.com/feathers-plus/feathers-redux/pull/57) ([petermikitsh](https://github.com/petermikitsh))
+
 ## [v2.1.0](https://github.com/feathers-plus/feathers-redux/tree/v2.1.0) (2018-01-10)
 [Full Changelog](https://github.com/feathers-plus/feathers-redux/compare/v2.0.0...v2.1.0)
 
