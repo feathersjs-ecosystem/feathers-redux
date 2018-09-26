@@ -392,7 +392,10 @@ export default (app, routeNameMap, options) => {
   }
 
   Object.keys(routeNames).forEach(route => {
-    services[routeNames[route]] = reduxifyService(app, route, routeNames[route], options);
+    const names = Array.isArray(routeNames[route]) ? routeNames[route] : [routeNames[route]];
+    names.forEach(name => {
+      services[name] = reduxifyService(app, route, name, options);
+    });
   });
 
   return services;
