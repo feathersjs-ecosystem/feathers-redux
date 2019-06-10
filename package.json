@@ -4,6 +4,8 @@
   "version": "3.0.0",
   "homepage": "https://github.com/feathersjs/feathers-redux",
   "main": "lib/",
+  "module": "esm/",
+  "sideEffects": false,
   "keywords": [
     "feathers",
     "feathers-plugin"
@@ -32,7 +34,10 @@
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
     "changelog": "github_changelog_generator && git add CHANGELOG.md && git commit -am \"Updating changelog\"",
-    "compile": "shx rm -rf lib/ && babel -d lib/ src/",
+    "precompile": "shx rm -rf lib/ esm/",
+    "compile": "npm run compile:cjs && npm run compile:esm",
+    "compile:cjs": "CJS=1 babel -d lib/ src/",
+    "compile:esm": "babel -d esm/ src/",
     "watch": "babel --watch -d lib/ src/",
     "lint": "semistandard src/**/*.js test/**/*.js --fix",
     "mocha": "mocha --opts mocha.opts",
@@ -47,6 +52,7 @@
     ]
   },
   "directories": {
+    "esm": "esm",
     "lib": "lib"
   },
   "peerDependencies": {
