@@ -9,7 +9,7 @@ module.exports = function (api) {
       [
         "@babel/preset-env",
         {
-          modules: process.env.CJS ? "cjs" : false,
+          modules: process.env.ESM ? false : "cjs",
           loose: true
         }
       ]
